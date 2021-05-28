@@ -3,12 +3,21 @@ import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from './firebase-helper'
 import { TestUser, DerivedUser, SubClass } from './mocks/test-user'
 
+FirebaseHelper.setFirebaseConfig({
+	apiKey: "xxxx",  																				// cSpell: disable-line
+	authDomain: "xxx.firebaseapp.com",
+	projectId: "demo-test",
+	storageBucket: "demo-test.appspot.com",
+	messagingSenderId: "xxxxx",
+	appId: "1:3333:web:de345a34"
+})
+
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
 
 	beforeEach(()=> {
-		Store.useDataSource( new FirebaseDatasource() )
+		Store.useDataSource( new FirebaseDatasource( 'useEmulator', 9080 ) )
 		
 		testUser = new TestUser()
 		testUser.name = {

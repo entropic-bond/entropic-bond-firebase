@@ -2,6 +2,9 @@ import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-b
 import { FirebaseHelper, FirebaseQuery } from './firebase-helper'
 
 export class FirebaseDatasource implements DataSource {
+	constructor( useEmulator: 'useEmulator' = null, port: number = 8080 ) {
+		if ( useEmulator ) FirebaseHelper.instance.firestore().useEmulator('localhost', port )
+	}
 
 	findById( id: string, collectionName: string ): Promise< DocumentObject > {
 		const db = FirebaseHelper.instance.firestore()

@@ -6,18 +6,24 @@ import "firebase/firestore";
 export type FirebaseQuery = firebase.firestore.CollectionReference<firebase.firestore.DocumentData> 
 							| firebase.firestore.Query<firebase.firestore.DocumentData>
 
+export interface FirebaseConfig {
+	apiKey: string,
+	authDomain: string,
+	projectId: string,
+	storageBucket: string,
+	messagingSenderId: string,
+	appId: string,
+}
+
 export class FirebaseHelper {
-	private static firebaseConfig = {
-		apiKey: "AIzaSyDfMQ5VJ6KvqzWioD-uQA2z_2HjJwFtWH0",  																				// cSpell: disable-line
-		authDomain: "test-934d3.firebaseapp.com",
-		projectId: "test-934d3",
-		storageBucket: "test-934d3.appspot.com",
-		messagingSenderId: "386723616857",
-		appId: "1:386723616857:web:aacf5f1f7a786a1925f948"
-	}
 	
+	static setFirebaseConfig( config: FirebaseConfig ) {
+		FirebaseHelper._firebaseConfig = config
+	}
+
 	private constructor() {
-		firebase.initializeApp( FirebaseHelper.firebaseConfig )
+		if ( !FirebaseHelper._firebaseConfig ) throw new Error( 'You should set a firebase config object before using Firebase' )
+		firebase.initializeApp( FirebaseHelper._firebaseConfig )
 	}
 
 	static get instance() {
@@ -29,4 +35,5 @@ export class FirebaseHelper {
 	}
 
 	private static _instance: FirebaseHelper
+	private static _firebaseConfig: FirebaseConfig
 }
