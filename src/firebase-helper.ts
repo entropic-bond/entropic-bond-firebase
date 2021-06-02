@@ -1,7 +1,8 @@
-import firebase from "firebase";
+import firebase from "firebase"
 
-import "firebase/auth";
-import "firebase/firestore";
+import "firebase/auth"
+import "firebase/firestore"
+import "firebase/storage"
 
 export type FirebaseQuery = firebase.firestore.CollectionReference<firebase.firestore.DocumentData> 
 							| firebase.firestore.Query<firebase.firestore.DocumentData>
@@ -16,10 +17,37 @@ export interface FirebaseConfig {
 	appId?: string,
 }
 
+export interface EmulatorConfig {
+	host?: string
+	firestorePort?: number
+	storagePort?: number
+	authPort?: number
+	emulate?: boolean
+}
+
 export class FirebaseHelper {
 	
 	static setFirebaseConfig( config: FirebaseConfig ) {
 		FirebaseHelper._firebaseConfig = config
+	}
+
+	static useEmulator( emulatorConfig?: EmulatorConfig ) {
+		const defaultConfig = {
+			host: 'localhost',
+			firestorePort: 8080,
+			storagePort: 9199,
+			authPort: 9099,
+			emulate: true
+		}
+
+		this._emulatorConfig = {
+			...defaultConfig,
+			...emulatorConfig
+		}
+	}
+
+	static get emulator() {
+		return this._emulatorConfig
 	}
 
 	private constructor() {
@@ -35,6 +63,15 @@ export class FirebaseHelper {
 		return firebase.firestore()
 	}
 
+	storage() {
+		return firebase.storage()
+	}
+
+	auth() {
+		return firebase.auth()
+	}
+
 	private static _instance: FirebaseHelper
 	private static _firebaseConfig: FirebaseConfig
+	private static _emulatorConfig: EmulatorConfig
 }

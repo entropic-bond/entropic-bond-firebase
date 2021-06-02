@@ -5,16 +5,17 @@ import { FirebaseHelper } from './firebase-helper'
 import { TestUser, DerivedUser, SubClass } from './mocks/test-user'
 import mockData from './mocks/mock-data.json'
 
-FirebaseHelper.setFirebaseConfig({
-	projectId: "demo-test",
-})
-
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
 
+	FirebaseHelper.setFirebaseConfig({
+		projectId: "demo-test",
+	})
+	FirebaseHelper.useEmulator({ firestorePort: 9080 })
+	
 	beforeEach( async ()=> {
-		Store.useDataSource( new FirebaseDatasource( 'useEmulator', 9080 ) )
+		Store.useDataSource( new FirebaseDatasource() )
 		
 		testUser = new TestUser()
 		testUser.name = {

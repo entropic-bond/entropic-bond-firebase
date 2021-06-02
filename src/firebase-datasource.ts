@@ -1,9 +1,15 @@
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
-import { FirebaseHelper, FirebaseQuery } from './firebase-helper'
+import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from './firebase-helper'
 
-export class FirebaseDatasource implements DataSource {
-	constructor( useEmulator: 'useEmulator' = null, port: number = 8080 ) {
-		if ( useEmulator ) FirebaseHelper.instance.firestore().useEmulator('localhost', port )
+export class FirebaseDatasource extends DataSource {
+	constructor( emulator?: EmulatorConfig ) {
+		super()
+		if ( emulator ) FirebaseHelper.useEmulator( emulator )
+		const { emulate, host, firestorePort } = FirebaseHelper.emulator
+
+		if ( emulate ) {
+			FirebaseHelper.instance.firestore().useEmulator( host, firestorePort )
+		}
 	}
 
 	findById( id: string, collectionName: string ): Promise< DocumentObject > {
