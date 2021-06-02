@@ -1,9 +1,9 @@
 import fetch from 'node-fetch'
 import { Model, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
-import { FirebaseHelper } from './firebase-helper'
-import { TestUser, DerivedUser, SubClass } from './mocks/test-user'
-import mockData from './mocks/mock-data.json'
+import { FirebaseHelper } from '../firebase-helper'
+import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
+import mockData from '../mocks/mock-data.json'
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >

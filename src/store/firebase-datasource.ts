@@ -1,5 +1,5 @@
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
-import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from './firebase-helper'
+import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 export class FirebaseDatasource extends DataSource {
 	constructor( emulator?: EmulatorConfig ) {

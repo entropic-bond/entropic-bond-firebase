@@ -1,8 +1,8 @@
 (global as any).XMLHttpRequest = require('xhr2')
 import fetch from 'node-fetch'
 import { CloudStorage, StoredFile } from 'entropic-bond'
-import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
+import { FirebaseHelper } from '../firebase-helper'
 
 // Note about tests leaking. I've been checking and looks like firebase.storage 
 // methods are the responsible for the test leaking (as firebase v. 8.6.3).
