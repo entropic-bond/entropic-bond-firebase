@@ -39,9 +39,17 @@ export class FirebaseDatasource implements DataSource {
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		let query: FirebaseQuery = FirebaseHelper.instance.firestore().collection( collectionName )
 
-		Object.entries( queryObject ).forEach(([ field, operation ])=>{
-			query = query.where( field, operation.operator, operation.value )
+		DataSource.toPropertyPathOperations( queryObject.operations ).forEach(([ propPath, operation ]) =>{
+			query = query.where( propPath, operation.operator, operation.value )
 		})
+
+		if ( queryObject.sort ) {
+			query = query.orderBy( queryObject.sort.propertyName, queryObject.sort.order )
+		}
+
+		if( queryObject.limit ) {
+			query = query.limit( queryObject.limit )
+		}
 
 		return new Promise< DocumentObject[] >( async resolve => {
 			const doc = await query.get()
@@ -55,4 +63,13 @@ export class FirebaseDatasource implements DataSource {
 		return db.collection( collectionName ).doc( id ).delete()
 	}
 
+	next( limit?: number ): Promise< DocumentObject[] > {
+		// TODO
+		throw 'Not Implemented'	
+	}
+
+	prev( limit?: number ): Promise< DocumentObject[] > {
+		// TODO
+		throw 'Not Implemented'
+	}
 }

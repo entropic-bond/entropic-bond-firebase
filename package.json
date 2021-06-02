@@ -28,7 +28,7 @@
     "prepare": "npm run build",
     "build-ts": "cp -r ./src/ ./lib",
     "build-cjs": "tsc -p tsconfig-cjs.json",
-    "emulators": "firebase emulators:start"
+    "emulators": "firebase emulators:start --project demo-test"
   },
   "repository": {
     "type": "git",
@@ -48,15 +48,17 @@
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "@types/jest": "^26.0.23",
+    "@types/node-fetch": "^2.5.10",
     "git-branch-is": "^4.0.0",
     "husky": "^6.0.0",
-    "jest": "^27.0.1",
+    "jest": "^27.0.3",
+    "node-fetch": "^2.6.1",
     "semantic-release": "^17.4.3",
-    "ts-jest": "^27.0.1",
+    "ts-jest": "^27.0.2",
     "typescript": "^4.3.2"
   },
   "dependencies": {
-    "entropic-bond": "^1.1.2",
+    "entropic-bond": "^1.4.1",
     "firebase": "^8.6.3"
   },
   "husky": {

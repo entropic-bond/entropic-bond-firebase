@@ -7,12 +7,13 @@ export type FirebaseQuery = firebase.firestore.CollectionReference<firebase.fire
 							| firebase.firestore.Query<firebase.firestore.DocumentData>
 
 export interface FirebaseConfig {
-	apiKey: string,
-	authDomain: string,
+	apiKey?: string,
+	authDomain?: string,
 	projectId: string,
-	storageBucket: string,
-	messagingSenderId: string,
-	appId: string,
+	databaseURL?: string,
+	storageBucket?: string,
+	messagingSenderId?: string,
+	appId?: string,
 }
 
 export class FirebaseHelper {

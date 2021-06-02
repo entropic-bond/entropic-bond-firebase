@@ -1,22 +1,19 @@
+import fetch from 'node-fetch'
 import { Model, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from './firebase-helper'
 import { TestUser, DerivedUser, SubClass } from './mocks/test-user'
+import mockData from './mocks/mock-data.json'
 
 FirebaseHelper.setFirebaseConfig({
-	apiKey: "xxxx",  																				// cSpell: disable-line
-	authDomain: "xxx.firebaseapp.com",
 	projectId: "demo-test",
-	storageBucket: "demo-test.appspot.com",
-	messagingSenderId: "xxxxx",
-	appId: "1:3333:web:de345a34"
 })
 
 describe( 'Model', ()=>{
 	let model: Model< TestUser >
 	let testUser: TestUser
 
-	beforeEach(()=> {
+	beforeEach( async ()=> {
 		Store.useDataSource( new FirebaseDatasource( 'useEmulator', 9080 ) )
 		
 		testUser = new TestUser()
@@ -28,9 +25,22 @@ describe( 'Model', ()=>{
 		testUser.skills = [ 'lazy', 'dirty' ]
 		
 		model = Store.getModel<TestUser>( 'TestUser' )
+
+		const users = mockData.TestUser
+
+		for( const key in users ) {
+			const user = new TestUser()
+			user.fromObject( users[ key ] as any )
+			await model.save( user )
+		}
 	})
 
-	afterEach( ()=>FirebaseHelper.instance.firestore().terminate() )
+	afterEach( async ()=>{
+		FirebaseHelper.instance.firestore().terminate() 
+		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
+			method: 'DELETE'
+		})
+	})
 
 	it( 'should find document by id', async ()=>{
 		await model.save( testUser )
@@ -100,9 +110,11 @@ describe( 'Model', ()=>{
 			await model.save( testUser )
 
 			const admins = await model.query({
-				admin: {
-					operator: '==',
-					value: true
+				operations: {
+					admin: {
+						operator: '==',
+						value: true
+					}
 				}
 			})
 
@@ -218,4 +230,76 @@ describe( 'Model', ()=>{
 		})
 
 	})
+
+	describe( 'Operations on queries', ()=>{
+		it( 'should limit the result set', async ()=>{
+			const unlimited = await model.find().get()
+			const limited = await model.find().limit( 2 ).get()
+
+			expect( unlimited.length ).not.toBe( limited.length )
+			expect( limited ).toHaveLength( 2 )
+		})
+
+		it( 'should sort ascending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})
+		
+		it( 'should sort descending the result set', async ()=>{
+			const docs = await model.find().orderBy( 'age', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user3' )
+			expect( docs[1].id ).toEqual( 'user4' )
+		})
+
+		it( 'should sort by deep property path', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'name.firstName', 'desc' ).get()
+
+			expect( docs[0].id ).toEqual( 'user4' )
+			expect( docs[1].id ).toEqual( 'user3' )
+		})
+		
+		it( 'should sort by swallow property path', async ()=>{
+			const docs = await model.find().orderByDeepProp( 'age' ).get()
+
+			expect( docs[0].id ).toEqual( 'user2' )
+			expect( docs[1].id ).toEqual( 'user1' )
+		})		
+
+		xdescribe( 'Data Cursors', ()=>{
+			beforeEach( async ()=>{
+				await model.find().get( 2 )
+			})
+
+			it( 'should get next result set', async ()=>{
+				const docs = await model.next()
+				expect( docs ).toHaveLength( 2 )
+				expect( docs[0].id ).toEqual( 'user3' )
+			})
+			
+			it( 'should get previous result set', async ()=>{
+				await model.next()
+				await model.next()
+				const docs = await model.prev()
+				expect( docs ).toHaveLength( 2 )
+				expect( docs[0].id ).toEqual( 'user3' )
+			})
+
+			it( 'should not go lower than begining of result set', async ()=>{
+				const docs = await model.prev()
+				expect( docs ).toHaveLength( 0 )
+			})
+			
+			it( 'should not go beyond the end of result set', async ()=>{
+				await model.next()
+				await model.next()
+				const docs = await model.next()
+				expect( docs ).toHaveLength( 0 )
+			})
+			
+		})
+	})
+
 })
