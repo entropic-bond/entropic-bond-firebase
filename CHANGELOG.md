@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.0.0...v1.1.0) (2021-06-02)
+
+
+### Features
+
+* cloud storage ([582c8ae](https://github.com/entropic-bond/entropic-bond-firebase/commit/582c8aedf74b6bc976d78c6d4875ef145c0d0e2b))
+
 # 1.0.0 (2021-05-28)
 
 
