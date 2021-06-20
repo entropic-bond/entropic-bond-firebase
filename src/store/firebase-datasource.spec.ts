@@ -115,12 +115,11 @@ describe( 'Firestore Model', ()=>{
 			await model.save( testUser )
 
 			const admins = await model.query({
-				operations: {
-					admin: {
-						operator: '==',
-						value: true
-					}
-				}
+				operations: [{
+					property: 'admin',
+					operator: '==',
+					value: true
+				}]
 			})
 
 			expect( admins.length ).toBeGreaterThanOrEqual( 1 )
@@ -144,7 +143,52 @@ describe( 'Firestore Model', ()=>{
 			expect( admins[ 0 ].age ).toBeLessThan( 50 )
 		})
 
+		it( 'should query by subproperties', async ()=>{
+			const users = await model.query({
+				operations: [
+					{
+						property: 'name',
+						operator: '==',
+						value: { firstName: 'userFirstName3' }
+					},
+					{ property: 'age', operator: '!=', value: 134	}
+				]
+			})
 
+			expect( users[0].id ).toBe( 'user3' )
+		})
+
+		it( 'should find by subproperties', async ()=>{
+			const users = await model.find()
+				.where( 'name', '==', { firstName: 'userFirstName3' })
+				.get()
+
+			expect( users[0].id ).toBe( 'user3' )
+		})
+		
+		it( 'should find by property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.firstName', '==', 'userFirstName3' )
+				.get()
+
+				expect( users[0].id ).toBe( 'user3' )
+		})
+		
+		it( 'should find by superdeep property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'name.ancestorName.father', '==', 'user3Father')
+				.get()
+
+			expect( users[0].id ).toEqual( 'user3' )
+		})
+
+		it( 'should find by swallow property path', async ()=>{
+			const users = await model.find()
+				.whereDeepProp( 'age', '==', 21 )
+				.get()
+
+			expect( users[0].id ).toEqual( 'user2' )
+		})
 	})
 
 	describe( 'Derived classes should fit on parent collection', ()=>{

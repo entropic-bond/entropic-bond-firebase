@@ -45,8 +45,8 @@ export class FirebaseDatasource extends DataSource {
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		let query: FirebaseQuery = FirebaseHelper.instance.firestore().collection( collectionName )
 
-		DataSource.toPropertyPathOperations( queryObject.operations ).forEach(([ propPath, operation ]) =>{
-			query = query.where( propPath, operation.operator, operation.value )
+		DataSource.toPropertyPathOperations( queryObject.operations as any ).forEach( operation =>{
+			query = query.where( operation.property, operation.operator, operation.value )
 		})
 
 		if ( queryObject.sort ) {
