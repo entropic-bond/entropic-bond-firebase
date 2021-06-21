@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.0...v1.1.1) (2021-06-21)
+
+
+### Bug Fixes
+
+* forceExit ([034cdd3](https://github.com/entropic-bond/entropic-bond-firebase/commit/034cdd36bf94c35bb9827ce2660d036c80f8990c))
+* QueryObject refactor ([21de1e3](https://github.com/entropic-bond/entropic-bond-firebase/commit/21de1e3f939887c4b2f4e7ff49a5a5c842b3b356))
+
 # [1.1.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.0.0...v1.1.0) (2021-06-02)
 
 
