@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.1...v1.1.2) (2021-06-23)
+
+
+### Bug Fixes
+
+* problem with package-lock ([959f7c4](https://github.com/entropic-bond/entropic-bond-firebase/commit/959f7c45cd0c219216a17c2e92329d440f29c766))
+
 ## [1.1.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.0...v1.1.1) (2021-06-21)
 
 
