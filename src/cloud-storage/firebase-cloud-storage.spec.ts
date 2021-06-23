@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
-import { CloudStorage, Model, Persistent, persistent, registerClassFactory, Store, StoredFile } from 'entropic-bond'
+import { CloudStorage, Model, Persistent, persistent, registerPersistentClass, Store, StoredFile } from 'entropic-bond'
 
 // Note about tests leaking. I've been checking and looks like firebase.storage 
 // methods are the responsible for the test leaking (as firebase v. 8.6.3).
@@ -21,7 +21,7 @@ class File {
 }
 global.File = File
 
-@registerClassFactory( 'Test', ()=>new Test() )
+@registerPersistentClass( 'Test' )
 class Test extends Persistent {
 
 	get file(): StoredFile {

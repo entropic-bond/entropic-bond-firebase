@@ -51,7 +51,7 @@
     "@types/node-fetch": "^2.5.10",
     "git-branch-is": "^4.0.0",
     "husky": "^6.0.0",
-    "jest": "^27.0.4",
+    "jest": "^27.0.5",
     "node-fetch": "^2.6.1",
     "semantic-release": "^17.4.4",
     "ts-jest": "^27.0.3",
@@ -59,7 +59,7 @@
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.8.0",
+    "entropic-bond": "^1.8.1",
     "firebase": "^8.6.8"
   },
   "husky": {
