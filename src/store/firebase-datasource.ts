@@ -1,4 +1,5 @@
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
+import firebase from 'firebase'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 export class FirebaseDatasource extends DataSource {
@@ -52,15 +53,16 @@ export class FirebaseDatasource extends DataSource {
 		if ( queryObject.sort ) {
 			query = query.orderBy( queryObject.sort.propertyName, queryObject.sort.order )
 		}
+		
+		this._lastQuery = query
 
 		if( queryObject.limit ) {
+			this._lastLimit = queryObject.limit
 			query = query.limit( queryObject.limit )
 		}
 
-		return new Promise< DocumentObject[] >( async resolve => {
-			const doc = await query.get()
-			resolve( doc.docs.map( doc => doc.data() ) ) 
-		})
+
+		return this.getFromQuery( query )
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
@@ -70,12 +72,29 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	next( limit?: number ): Promise< DocumentObject[] > {
-		// TODO
-		throw 'Not Implemented'	
+		if( !this._lastQuery ) throw new Error('You should perform a query prior to using method next')
+		this._lastLimit = limit || this._lastLimit
+		let query = this._lastQuery
+									.limit( this._lastLimit )
+									.startAfter( this._lastDocRetrieved )
+
+		return this.getFromQuery( query )
 	}
 
-	prev( limit?: number ): Promise< DocumentObject[] > {
-		// TODO
-		throw 'Not Implemented'
+	// prev should be used with next in reverse order
+	// prev( limit?: number ): Promise< DocumentObject[] > {
+	// }
+
+	private getFromQuery( query: FirebaseQuery ) {
+		return new Promise< DocumentObject[] >( async resolve => {
+			const doc = await query.get()
+			this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
+
+			resolve( doc.docs.map( doc => doc.data() ) ) 
+		})
 	}
+
+	private _lastDocRetrieved: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
+	private _lastQuery: FirebaseQuery
+	private _lastLimit: number
 }

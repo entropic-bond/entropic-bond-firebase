@@ -380,28 +380,18 @@ describe( 'Firestore Model', ()=>{
 			expect( docs[ 1 ].id ).toEqual( 'user1' )
 		})
 
-		xdescribe( 'Data Cursors', ()=>{
+		describe( 'Data Cursors', ()=>{
 			beforeEach( async ()=>{
 				await model.find().get( 2 )
 			})
 
 			it( 'should get next result set', async ()=>{
 				const docs = await model.next()
+				const mockDataArr = Object.values( mockData.TestUser )
+				
 				expect( docs ).toHaveLength( 2 )
+				expect( docs[0].id ).toEqual( mockDataArr[2].id )
 				expect( docs[ 0 ].id ).toEqual( 'user3' )
-			})
-
-			it( 'should get previous result set', async ()=>{
-				await model.next()
-				await model.next()
-				const docs = await model.prev()
-				expect( docs ).toHaveLength( 2 )
-				expect( docs[ 0 ].id ).toEqual( 'user3' )
-			})
-
-			it( 'should not go lower than begining of result set', async ()=>{
-				const docs = await model.prev()
-				expect( docs ).toHaveLength( 0 )
 			})
 
 			it( 'should not go beyond the end of result set', async ()=>{
