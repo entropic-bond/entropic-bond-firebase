@@ -29,18 +29,17 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	save( collections: Collections ): Promise< void > {
-		const promises: Promise<void>[] = []
 		const db = FirebaseHelper.instance.firestore()
+		const batch = db.batch()
 
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			collection.forEach( document => {
-				promises.push( 
-					db.collection( collectionName ).doc( document.id ).set( document ) 
-				)
+					const ref = db.collection( collectionName ).doc( document.id )
+					batch.set( ref, document ) 
 			})
 		})
 
-		return Promise.all( promises ) as unknown as Promise<void>
+		return batch.commit()
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
