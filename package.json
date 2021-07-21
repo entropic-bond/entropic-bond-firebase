@@ -47,20 +47,20 @@
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "@types/jest": "^26.0.23",
-    "@types/node-fetch": "^2.5.10",
+    "@types/jest": "^26.0.24",
+    "@types/node-fetch": "^2.5.11",
     "git-branch-is": "^4.0.0",
-    "husky": "^6.0.0",
-    "jest": "^27.0.5",
+    "husky": "^7.0.1",
+    "jest": "^27.0.6",
     "node-fetch": "^2.6.1",
     "semantic-release": "^17.4.4",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5",
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.8.3",
-    "firebase": "^8.6.8"
+    "entropic-bond": "^1.9.0",
+    "firebase": "^8.7.1"
   },
   "husky": {
     "hooks": {
