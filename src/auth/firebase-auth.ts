@@ -1,6 +1,8 @@
-import firebase from 'firebase'
-import { AuthErrorCode, AuthService, SignData, UserCredential } from 'entropic-bond'
+import firebase from 'firebase/app'
+import { SignData, UserCredentials } from 'entropic-bond'
+import { AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
 import { FirebaseHelper } from '../firebase-helper'
+import { camelCase } from '../utils/utils'
 
 export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 	constructor() {
@@ -8,48 +10,54 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 		this.registerCredentialProviders()
 	}
 
-	signUp( signData: SignData ): Promise<UserCredential> {
+	signUp( signData: SignData ): Promise<UserCredentials> {
 		const { authProvider, verificationLink } = signData
 	
 		if ( authProvider.slice( 0, 5 ) === 'email' ) {
-			return new Promise<UserCredential>( async ( resolve: ( credential: UserCredential )=>void, reject: ( reason: AuthErrorCode ) => void ) => {
+			return new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
 				try {
 					const credentialFactory = this.credentialProviders[ 'email-sign-up' ]
-					const userCredential = await credentialFactory( signData )
+					const userCredentials = await credentialFactory( signData )
 					
 					if ( signData.name ) {
-						userCredential.user.updateProfile({
+						userCredentials.user.updateProfile({
 							displayName: signData.name
 						})
 					}
 					
 					if ( verificationLink ) {
-						await userCredential.user.sendEmailVerification({
+						await userCredentials.user.sendEmailVerification({
 							url: verificationLink
 						})
 					}
 
-					resolve( await this.toUserCredential( userCredential.user ) )
+					resolve( await this.toUserCredentials( userCredentials.user ) )
 				}
 				catch( error ) {
-					reject( error.code as AuthErrorCode )
+					reject({ 
+						code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode, 
+						message: error.message 
+					})
 				}
 			})
 		}
 		else return this.login( signData )
 	}
 
-	login( signData: SignData ): Promise<UserCredential> {
+	login( signData: SignData ): Promise<UserCredentials> {
 		const { authProvider } = signData
 
-		return new Promise<UserCredential>( async ( resolve, reject ) => {
+		return new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
 			try {
 				const credentialFactory = this.credentialProviders[ authProvider ]
-				const userCredential = await credentialFactory( signData )
-				resolve( await this.toUserCredential( userCredential.user ) )
+				const userCredentials = await credentialFactory( signData )
+				resolve( await this.toUserCredentials( userCredentials.user ) )
 			}
 			catch( error ) {
-				reject( error )
+				reject({ 
+					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode, 
+					message: error.message
+				})
 			}
 		})
 	}
@@ -58,13 +66,13 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 		return FirebaseHelper.instance.auth().signOut()
 	}
 
-	onAuthStateChange( onChange: (userCredential: UserCredential) => void ) {
-		FirebaseHelper.instance.auth().onAuthStateChanged( async credential =>{
-			onChange( await this.toUserCredential( credential ) )
+	onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ) {
+		FirebaseHelper.instance.auth().onAuthStateChanged( async credentials =>{
+			onChange( await this.toUserCredentials( credentials ) )
 		})
 	}
 
-	private async toUserCredential( nativeUserCredential: firebase.User ): Promise< UserCredential > {
+	private async toUserCredentials( nativeUserCredential: firebase.User ): Promise< UserCredentials > {
 		if ( !nativeUserCredential ) return null
 		
 		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims
@@ -72,7 +80,7 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 		return FirebaseAuth.convertCredentials( nativeUserCredential, claims )
 	}
 
-	static convertCredentials( nativeUserCredential: firebase.User, claims: {[key:string]:any} ): UserCredential {
+	static convertCredentials( nativeUserCredential: firebase.User, claims: {[key:string]:any} ): UserCredentials {
 		return ({
 			id: nativeUserCredential.uid,
 			email: nativeUserCredential.email,
