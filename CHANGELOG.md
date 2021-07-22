@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.0...v1.2.1) (2021-07-22)
+
+
+### Bug Fixes
+
+* auth errors ([182f1b6](https://github.com/entropic-bond/entropic-bond-firebase/commit/182f1b616ffca722765675dceeb2f1d895ad82dc))
+
 # [1.2.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.2...v1.2.0) (2021-07-22)
 
 
