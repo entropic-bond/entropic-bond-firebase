@@ -240,7 +240,7 @@ describe( 'Firestore Model', ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
 			expect( loadedUser.documentRef ).toBeInstanceOf( SubClass )
-			expect( loadedUser.documentRef.id ).toBeUndefined()
+			expect( loadedUser.documentRef.id ).toBeDefined()
 			expect( loadedUser.documentRef.year ).toBeUndefined()
 		})
 
@@ -267,10 +267,10 @@ describe( 'Firestore Model', ()=>{
 			
 			expect( loadedUser.manyRefs ).toHaveLength( 2 )
 			expect( loadedUser.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser.manyRefs[0].id ).toBeUndefined()
+			expect( loadedUser.manyRefs[0].id ).toEqual( testUser.manyRefs[0].id )
 			expect( loadedUser.manyRefs[0].year ).toBeUndefined()
 			expect( loadedUser.manyRefs[1] ).toBeInstanceOf( SubClass )
-			expect( loadedUser.manyRefs[1].id ).toBeUndefined()
+			expect( loadedUser.manyRefs[1].id ).toEqual( testUser.manyRefs[1].id )
 			expect( loadedUser.manyRefs[1].year ).toBeUndefined()
 		})
 
@@ -285,7 +285,8 @@ describe( 'Firestore Model', ()=>{
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.derived.id ).toBeUndefined()
+			expect( loadedUser.derived.id ).toEqual( testUser.derived.id )
+			expect( loadedUser.derived.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser.derived )
 
@@ -304,7 +305,9 @@ describe( 'Firestore Model', ()=>{
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser.manyDerived[0].id ).toBeUndefined()
+			expect( loadedUser.manyDerived[0].id ).toEqual( testUser.manyDerived[0].id )
+			expect( loadedUser.manyDerived[0].salary ).toBeUndefined()
+			expect( loadedUser.manyDerived[1].salary ).toBeUndefined()
 
 			await Store.populate( loadedUser.manyDerived )
 
