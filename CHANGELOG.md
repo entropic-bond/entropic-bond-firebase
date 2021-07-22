@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.2...v1.2.0) (2021-07-22)
+
+
+### Bug Fixes
+
+* empty test not passing ([1f72d85](https://github.com/entropic-bond/entropic-bond-firebase/commit/1f72d85cded5b1ab7bf48918ba4ef0d3473cc937))
+
+
+### Features
+
+* auth ([aebcdaa](https://github.com/entropic-bond/entropic-bond-firebase/commit/aebcdaa725a103b6b6b7f52be44ee10d35ae5e3c))
+* new reference format ([b681087](https://github.com/entropic-bond/entropic-bond-firebase/commit/b681087862d9ea3aaf759df42603f932f3c4a1d1))
+* save in batch ([9c28657](https://github.com/entropic-bond/entropic-bond-firebase/commit/9c28657392ee6a73b642a894475da32221a05cea))
+
 ## [1.1.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.1.1...v1.1.2) (2021-06-23)
 
 
