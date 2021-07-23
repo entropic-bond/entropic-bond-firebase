@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.1...v1.2.2) (2021-07-23)
+
+
+### Bug Fixes
+
+* downgrade ES5 ([25d207d](https://github.com/entropic-bond/entropic-bond-firebase/commit/25d207dba55e2b0ee38b72d6fb05ee3350bdf3b4))
+* npm upgrade to do ES5 downgrade ([91919d9](https://github.com/entropic-bond/entropic-bond-firebase/commit/91919d911a36463102ef0f98f87d996e49b501c4))
+
 ## [1.2.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.0...v1.2.1) (2021-07-22)
 
 
