@@ -1,5 +1,5 @@
 {
-  "name": "entropic-bond-firebase",
+  "name": "@entropic-bond/firebase",
   "version": "1.2.2",
   "publishConfig": {
     "access": "public",
