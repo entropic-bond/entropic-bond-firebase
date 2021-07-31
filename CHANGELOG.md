@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.2...v1.3.0) (2021-07-31)
+
+
+### Features
+
+* scoped to npm entropic-bond organization ([a90bcd5](https://github.com/entropic-bond/entropic-bond-firebase/commit/a90bcd52bc352c034b108a2b5d1f8474c82ae326))
+
 ## [1.2.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.1...v1.2.2) (2021-07-23)
 
 
