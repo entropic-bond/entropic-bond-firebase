@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "entropic-bond": "^1.13.0",
-    "firebase": "^8.8.0"
+    "firebase": "^9.0.0"
   },
   "husky": {
     "hooks": {

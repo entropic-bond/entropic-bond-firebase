@@ -1,11 +1,10 @@
-import firebase from "firebase"
+import { FirebaseApp, initializeApp } from "firebase/app"
+import { CollectionReference, DocumentData, getFirestore, Query } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { getStorage } from 'firebase/storage'
 
-import "firebase/auth"
-import "firebase/firestore"
-import "firebase/storage"
-
-export type FirebaseQuery = firebase.firestore.CollectionReference<firebase.firestore.DocumentData> 
-							| firebase.firestore.Query<firebase.firestore.DocumentData>
+export type FirebaseQuery = CollectionReference<DocumentData> 
+							| Query<DocumentData>
 
 export interface FirebaseConfig {
 	apiKey?: string,
@@ -52,7 +51,7 @@ export class FirebaseHelper {
 
 	private constructor() {
 		if ( !FirebaseHelper._firebaseConfig ) throw new Error( 'You should set a firebase config object before using Firebase' )
-		firebase.initializeApp( FirebaseHelper._firebaseConfig )
+		this._firebaseApp = initializeApp( FirebaseHelper._firebaseConfig )
 	}
 
 	static get instance() {
@@ -60,18 +59,19 @@ export class FirebaseHelper {
 	}
 
 	firestore() {
-		return firebase.firestore()
+		return getFirestore( this._firebaseApp )
 	}
 
 	storage() {
-		return firebase.storage()
+		return getStorage( this._firebaseApp )
 	}
 
 	auth() {
-		return firebase.auth()
+		return getAuth( this._firebaseApp )
 	}
 
 	private static _instance: FirebaseHelper
 	private static _firebaseConfig: FirebaseConfig
 	private static _emulatorConfig: EmulatorConfig
+	private _firebaseApp: FirebaseApp
 }

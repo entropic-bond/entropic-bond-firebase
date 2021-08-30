@@ -4,6 +4,7 @@ import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
+import { terminate } from 'firebase/firestore'
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = mockData.TestUser
@@ -41,7 +42,7 @@ describe( 'Firestore Model', ()=>{
 	})
 
 	afterEach( async ()=>{
-		FirebaseHelper.instance.firestore().terminate()
+		terminate( FirebaseHelper.instance.firestore() )
 		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
 			method: 'DELETE'
 		})

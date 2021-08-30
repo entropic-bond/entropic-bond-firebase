@@ -1,5 +1,5 @@
+import { collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, where, writeBatch } from 'firebase/firestore'
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
-import firebase from 'firebase'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 export class FirebaseDatasource extends DataSource {
@@ -9,7 +9,7 @@ export class FirebaseDatasource extends DataSource {
 		const { emulate, host, firestorePort } = FirebaseHelper.emulator
 
 		if ( emulate ) {
-			FirebaseHelper.instance.firestore().useEmulator( host, firestorePort )
+			connectFirestoreEmulator( FirebaseHelper.instance.firestore(), host, firestorePort )
 		}
 	}
 
@@ -18,8 +18,8 @@ export class FirebaseDatasource extends DataSource {
 		
 		return new Promise<DocumentObject>( async resolve => {
 			try {
-				const doc = await db.collection( collectionName ).doc( id ).get()
-				resolve( doc.data() )
+				const docSnap = await getDoc( doc( db, collectionName, id ) )
+				resolve( docSnap.data() )
 			} 
 			catch( error ) {
 				console.log( error )
@@ -30,11 +30,11 @@ export class FirebaseDatasource extends DataSource {
 
 	save( collections: Collections ): Promise< void > {
 		const db = FirebaseHelper.instance.firestore()
-		const batch = db.batch()
+		const batch = writeBatch( db )
 
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
 			collection.forEach( document => {
-					const ref = db.collection( collectionName ).doc( document.id )
+					const ref = doc( db, collectionName, document.id )
 					batch.set( ref, document ) 
 			})
 		})
@@ -43,41 +43,46 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
-		let query: FirebaseQuery = FirebaseHelper.instance.firestore().collection( collectionName )
+		const db = FirebaseHelper.instance.firestore()
+		let queryRef = query( collection( db, collectionName ) )
 
-		DataSource.toPropertyPathOperations( queryObject.operations as any ).forEach( operation =>{
-			query = query.where( operation.property, operation.operator, operation.value )
-		})
+		const constraints: QueryConstraint[] = DataSource.toPropertyPathOperations( 
+			queryObject.operations as any 
+		).map( operation =>	where( operation.property, operation.operator, operation.value ) )
 
 		if ( queryObject.sort ) {
-			query = query.orderBy( queryObject.sort.propertyName, queryObject.sort.order )
+			constraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
 		}
 		
-		this._lastQuery = query
+		this._lastConstraints = constraints
+		this._lastCollectionName = collectionName
 
 		if( queryObject.limit ) {
 			this._lastLimit = queryObject.limit
-			query = query.limit( queryObject.limit )
+			constraints.push( limit( queryObject.limit ) )
 		}
 
-
-		return this.getFromQuery( query )
+		return this.getFromQuery( query( collection( db, collectionName ), ...constraints ) )
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
 		const db = FirebaseHelper.instance.firestore()
 
-		return db.collection( collectionName ).doc( id ).delete()
+		return deleteDoc( doc( db, collectionName, id ) )
 	}
 
-	next( limit?: number ): Promise< DocumentObject[] > {
-		if( !this._lastQuery ) throw new Error('You should perform a query prior to using method next')
-		this._lastLimit = limit || this._lastLimit
-		let query = this._lastQuery
-									.limit( this._lastLimit )
-									.startAfter( this._lastDocRetrieved )
+	next( maxDocs?: number ): Promise< DocumentObject[] > {
+		if( !this._lastConstraints ) throw new Error('You should perform a query prior to using method next')
 
-		return this.getFromQuery( query )
+		const db = FirebaseHelper.instance.firestore()
+		this._lastLimit = maxDocs || this._lastLimit
+
+		const constraints = this._lastConstraints.concat(
+			limit( this._lastLimit ),
+			startAfter( this._lastDocRetrieved )
+		)
+
+		return this.getFromQuery( query( collection( db, this._lastCollectionName ), ...constraints ) )
 	}
 
 	// prev should be used with next in reverse order
@@ -86,14 +91,15 @@ export class FirebaseDatasource extends DataSource {
 
 	private getFromQuery( query: FirebaseQuery ) {
 		return new Promise< DocumentObject[] >( async resolve => {
-			const doc = await query.get()
+			const doc = await getDocs( query )
 			this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
 
 			resolve( doc.docs.map( doc => doc.data() ) ) 
 		})
 	}
 
-	private _lastDocRetrieved: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
-	private _lastQuery: FirebaseQuery
+	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData>
+	private _lastConstraints: QueryConstraint[]
 	private _lastLimit: number
+	private _lastCollectionName: string
 }

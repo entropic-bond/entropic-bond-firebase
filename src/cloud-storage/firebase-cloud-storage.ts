@@ -1,5 +1,5 @@
-import firebase from 'firebase'
 import { registerCloudStorage, CloudStorage, UploadControl, UploadProgress } from 'entropic-bond'
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable, UploadTask, connectStorageEmulator } from 'firebase/storage'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 
 @registerCloudStorage( 'FirebaseCloudStorage', ()=> new FirebaseCloudStorage() )
@@ -10,7 +10,7 @@ export class FirebaseCloudStorage extends CloudStorage {
 		const { emulate, host, storagePort } = FirebaseHelper.emulator
 
 		if ( emulate ) {
-			FirebaseHelper.instance.storage().useEmulator( host, storagePort )
+			connectStorageEmulator( FirebaseHelper.instance.storage(), host, storagePort )
 		}
 	}
 
@@ -18,11 +18,11 @@ export class FirebaseCloudStorage extends CloudStorage {
 		const storage = FirebaseHelper.instance.storage()
 
 		return new Promise<string>(( resolve, reject ) => {
-			this._uploadTask = storage.ref().child( id ).put( data )
+			this._uploadTask = uploadBytesResumable( ref( storage, id ), data )
 			
 			if ( progress ) {
-				var unsubscribe = this._uploadTask.on(
-					firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+				var unsubscribe = this._uploadTask.on( 'state_changed', 
+					snapshot => {
 						progress( snapshot.bytesTransferred, snapshot.totalBytes )
 					},
 					null, 
@@ -40,7 +40,7 @@ export class FirebaseCloudStorage extends CloudStorage {
 		if ( !reference ) return Promise.resolve( undefined )
 
 		const storage = FirebaseHelper.instance.storage()
-		return storage.ref().child( reference ).getDownloadURL()
+		return getDownloadURL( ref( storage, reference ) )
 	}
 
 	uploadControl(): UploadControl {
@@ -58,8 +58,8 @@ export class FirebaseCloudStorage extends CloudStorage {
 
 	delete( reference: string ): Promise<void> {
 		const storage = FirebaseHelper.instance.storage()
-		return storage.ref().child( reference ).delete()
+		return deleteObject( ref( storage, reference ) )
 	}
 
-	private _uploadTask: firebase.storage.UploadTask
+	private _uploadTask: UploadTask
 }

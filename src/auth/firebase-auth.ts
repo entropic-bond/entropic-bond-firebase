@@ -1,10 +1,10 @@
-import firebase from 'firebase/app'
 import { SignData, UserCredentials } from 'entropic-bond'
 import { AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
+import { createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, updateProfile, User, UserCredential } from 'firebase/auth'
 import { FirebaseHelper } from '../firebase-helper'
 import { camelCase } from '../utils/utils'
 
-export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
+export class FirebaseAuth extends AuthService<UserCredential> {
 	constructor() {
 		super()
 		this.registerCredentialProviders()
@@ -20,13 +20,13 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 					const userCredentials = await credentialFactory( signData )
 					
 					if ( signData.name ) {
-						userCredentials.user.updateProfile({
+						await updateProfile( userCredentials.user, {
 							displayName: signData.name
 						})
 					}
 					
 					if ( verificationLink ) {
-						await userCredentials.user.sendEmailVerification({
+						await sendEmailVerification( userCredentials.user, {
 							url: verificationLink
 						})
 					}
@@ -72,7 +72,7 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 		})
 	}
 
-	private async toUserCredentials( nativeUserCredential: firebase.User ): Promise< UserCredentials > {
+	private async toUserCredentials( nativeUserCredential: User ): Promise< UserCredentials > {
 		if ( !nativeUserCredential ) return null
 		
 		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims
@@ -80,7 +80,7 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 		return FirebaseAuth.convertCredentials( nativeUserCredential, claims )
 	}
 
-	static convertCredentials( nativeUserCredential: firebase.User, claims: {[key:string]:any} ): UserCredentials {
+	static convertCredentials( nativeUserCredential: User, claims: {[key:string]:any} ): UserCredentials {
 		return ({
 			id: nativeUserCredential.uid,
 			email: nativeUserCredential.email,
@@ -99,20 +99,20 @@ export class FirebaseAuth extends AuthService<firebase.auth.UserCredential> {
 	}
 
 	private registerCredentialProviders() {
-		this.registerCredentialProvider( 'email-sign-up', signData => FirebaseHelper.instance.auth()
-		.createUserWithEmailAndPassword( signData.email, signData.password ) 
-		)
-		this.registerCredentialProvider( 'email', signData => FirebaseHelper.instance.auth()
-		.signInWithEmailAndPassword( signData.email, signData.password ) 
-		)
-		this.registerCredentialProvider( 'google', () => FirebaseHelper.instance.auth()
-			.signInWithPopup( new firebase.auth.GoogleAuthProvider() ) 
-		)
-		this.registerCredentialProvider( 'facebook', () => FirebaseHelper.instance.auth()
-			.signInWithPopup( new firebase.auth.FacebookAuthProvider() )
-		)
-		this.registerCredentialProvider( 'anonymous', async () => FirebaseHelper.instance.auth()
-			.signInAnonymously()
-		)
+		this.registerCredentialProvider( 'email-sign-up', signData => createUserWithEmailAndPassword( 
+			FirebaseHelper.instance.auth(), signData.email, signData.password 
+		))
+		this.registerCredentialProvider( 'email', signData => signInWithEmailAndPassword(
+			FirebaseHelper.instance.auth(), signData.email, signData.password
+		))
+		this.registerCredentialProvider( 'google', () => signInWithPopup(
+			FirebaseHelper.instance.auth(), new GoogleAuthProvider()
+		))
+		this.registerCredentialProvider( 'facebook', () => signInWithPopup(
+			FirebaseHelper.instance.auth(), new FacebookAuthProvider()
+		))
+		this.registerCredentialProvider( 'anonymous', () => signInAnonymously(
+			FirebaseHelper.instance.auth()
+		))
 	}
 }
