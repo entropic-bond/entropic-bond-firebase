@@ -47,15 +47,15 @@
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.1",
     "@types/node-fetch": "^2.5.12",
     "git-branch-is": "^4.0.0",
-    "husky": "^7.0.1",
-    "jest": "^27.0.6",
+    "husky": "^7.0.2",
+    "jest": "^27.1.0",
     "node-fetch": "^2.6.1",
-    "semantic-release": "^17.4.4",
-    "ts-jest": "^27.0.4",
-    "typescript": "^4.3.5",
+    "semantic-release": "^17.4.7",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.2",
     "xhr2": "^0.2.1"
   },
   "dependencies": {

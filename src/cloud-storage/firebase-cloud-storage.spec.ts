@@ -1,4 +1,7 @@
-(global as any).XMLHttpRequest = require('xhr2')
+/**
+ * @jest-environment node
+ */
+ (global as any).XMLHttpRequest = require('xhr2')
 import fetch from 'node-fetch'
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
@@ -19,7 +22,7 @@ class File {
 	stream: any
 	text: any
 }
-global.File = File
+global['File'] = File as any
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {
@@ -51,32 +54,32 @@ describe( 'Firebase Cloud Storage', ()=>{
 	})
 
 	it( 'should save and get a url', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data:blobData1 })
 
 		expect( file.url ).toContain( file.id )
 	})
 	
 	it( 'should report metadata', async ()=>{
-		await file.store( blobData1, 'test.dat' )
+		await file.save({ data: blobData1, fileName: 'test.dat' })
 
 		expect( file.originalFileName ).toEqual( 'test.dat' )
 		expect( file.provider.className ).toEqual( 'FirebaseCloudStorage' )
 	})
 
 	it( 'should delete file', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data:blobData1 })
 
 		await file.delete()
 		expect( file.url ).not.toBeDefined()		
 	})
 
 	it( 'should overwrite file on subsequent writes', async ()=>{
-		await file.store( blobData1 )
+		await file.save({ data:blobData1 })
 		const firstUrl = file.url
 		let resp = await fetch( file.url )
 		expect( await resp.text() ).toEqual( 'Hello, world!')
 
-		await file.store( blobData2 )
+		await file.save({ data:blobData2 })
 		resp = await fetch( file.url )
 		expect( 
 			file.url.slice( 0, file.url.indexOf('token') ) 
@@ -89,7 +92,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 	it( 'should trigger events', done=>{
 		const cb = jest.fn()
 
-		file.store( blobData1 ).then( ()=>{
+		file.save({ data:blobData1 }).then( ()=>{
 			expect( cb ).toHaveBeenCalledTimes( 2 )
 			done()
 		})
@@ -107,7 +110,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 		})
 
 		it( 'should load object with StoredFile', async ()=>{
-			await testObj.file.store( blobData1, 'test.dat' )
+			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
 			const newTestObj = await model.findById( testObj.id )
@@ -119,7 +122,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 		it( 'should replace file on save after load', async ()=>{
 			const deleteSpy = jest.spyOn( testObj.file, 'delete' )
 
-			await testObj.file.store( blobData1, 'test.dat' )
+			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
 			const newTestObj = await model.findById( testObj.id )
@@ -129,7 +132,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 			expect( deleteSpy ).not.toHaveBeenCalled()
 
 			testObj.file.setDataToStore( blobData2 )
-			await testObj.file.store()
+			await testObj.file.save()
 
 			expect( deleteSpy ).toHaveBeenCalled()
 		})		

@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import { CloudStorage, registerCloudStorage, UploadControl } from 'entropic-bond'
+import { registerCloudStorage, CloudStorage, UploadControl, UploadProgress } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 
 @registerCloudStorage( 'FirebaseCloudStorage', ()=> new FirebaseCloudStorage() )
@@ -14,11 +14,22 @@ export class FirebaseCloudStorage extends CloudStorage {
 		}
 	}
 
-	store( id: string, data: Blob | Uint8Array | ArrayBuffer ): Promise<string> {
+	save( id: string, data: Blob | Uint8Array | ArrayBuffer, progress?: UploadProgress ): Promise<string> {
 		const storage = FirebaseHelper.instance.storage()
 
 		return new Promise<string>(( resolve, reject ) => {
 			this._uploadTask = storage.ref().child( id ).put( data )
+			
+			if ( progress ) {
+				var unsubscribe = this._uploadTask.on(
+					firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+						progress( snapshot.bytesTransferred, snapshot.totalBytes )
+					},
+					null, 
+					()=>unsubscribe() 
+				);
+			}
+
 			this._uploadTask
 				.then( () => resolve( id ) )
 				.catch( error => reject( error ))
