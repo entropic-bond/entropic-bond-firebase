@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.3.0...v1.4.0) (2021-08-30)
+
+
+### Bug Fixes
+
+* npm update ([090a43e](https://github.com/entropic-bond/entropic-bond-firebase/commit/090a43e1186cba7a343efc11363c7571ec27ee6c))
+* update entropic-bond v1.13.0 ([31ab248](https://github.com/entropic-bond/entropic-bond-firebase/commit/31ab2483f47ba85dd0c880b026a9ec68151fd74b))
+
+
+### Features
+
+* upgrade to firebase 9 ([cd559de](https://github.com/entropic-bond/entropic-bond-firebase/commit/cd559de46bb2d8b96161bed92fec591800a1ca26))
+
 # [1.3.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.2.2...v1.3.0) (2021-07-31)
 
 
