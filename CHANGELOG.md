@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.4.0...v1.4.1) (2021-09-02)
+
+
+### Bug Fixes
+
+* bug in emulate ([f35c236](https://github.com/entropic-bond/entropic-bond-firebase/commit/f35c23645926e621918b44639d0c935e32122a6b))
+
 # [1.4.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.3.0...v1.4.0) (2021-08-30)
 
 
