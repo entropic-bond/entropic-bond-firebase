@@ -7,9 +7,9 @@ export class FirebaseCloudStorage extends CloudStorage {
 	constructor( emulator?: EmulatorConfig ) {
 		super()
 		if ( emulator ) FirebaseHelper.useEmulator( emulator )
-		const { emulate, host, storagePort } = FirebaseHelper.emulator
-
-		if ( emulate ) {
+		
+		if ( FirebaseHelper.emulator?.emulate ) {
+			const { host, storagePort } = FirebaseHelper.emulator
 			connectStorageEmulator( FirebaseHelper.instance.storage(), host, storagePort )
 		}
 	}

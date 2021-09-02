@@ -46,8 +46,6 @@ describe( 'Firebase Cloud Storage', ()=>{
 	FirebaseHelper.useEmulator({ firestorePort: 9080 })
 	Store.useDataSource( new FirebaseDatasource() )
 
-
-	
 	beforeEach(()=>{
 		CloudStorage.useCloudStorage( new FirebaseCloudStorage() )
 		file = new StoredFile()

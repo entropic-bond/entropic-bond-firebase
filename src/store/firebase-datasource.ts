@@ -6,9 +6,9 @@ export class FirebaseDatasource extends DataSource {
 	constructor( emulator?: EmulatorConfig ) {
 		super()
 		if ( emulator ) FirebaseHelper.useEmulator( emulator )
-		const { emulate, host, firestorePort } = FirebaseHelper.emulator
-
-		if ( emulate ) {
+		
+		if ( FirebaseHelper.emulator?.emulate ) {
+			const { host, firestorePort } = FirebaseHelper.emulator
 			connectFirestoreEmulator( FirebaseHelper.instance.firestore(), host, firestorePort )
 		}
 	}
