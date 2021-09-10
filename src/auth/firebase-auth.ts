@@ -1,6 +1,6 @@
 import { SignData, UserCredentials } from 'entropic-bond'
 import { AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
-import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, updateProfile, User, UserCredential } from 'firebase/auth'
+import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User, UserCredential } from 'firebase/auth'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 import { camelCase } from '../utils/utils'
 
@@ -117,6 +117,9 @@ export class FirebaseAuth extends AuthService<UserCredential> {
 		))
 		this.registerCredentialProvider( 'facebook', () => signInWithPopup(
 			FirebaseHelper.instance.auth(), new FacebookAuthProvider()
+		))
+		this.registerCredentialProvider( 'twitter', () => signInWithPopup(
+			FirebaseHelper.instance.auth(), new TwitterAuthProvider()
 		))
 		this.registerCredentialProvider( 'anonymous', () => signInAnonymously(
 			FirebaseHelper.instance.auth()
