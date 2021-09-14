@@ -5,7 +5,7 @@ import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 import { camelCase } from '../utils/utils'
 
 interface CredentialProviders {
-	[ name: string ]: ( signData?: SignData ) => Promise<UserCredential>
+	[ name: string ]: ( signData?: SignData ) => Promise<any>
 }
 
 export class FirebaseAuth extends AuthService {
