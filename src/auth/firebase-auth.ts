@@ -1,10 +1,14 @@
-import { SignData, UserCredentials } from 'entropic-bond'
+import { AdditionalProvider, SignData, UserCredentials } from 'entropic-bond'
 import { AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
-import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User, UserCredential } from 'firebase/auth'
+import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User, UserCredential } from 'firebase/auth'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 import { camelCase } from '../utils/utils'
 
-export class FirebaseAuth extends AuthService<UserCredential> {
+interface CredentialProviders {
+	[ name: string ]: ( signData?: SignData ) => Promise<UserCredential>
+}
+
+export class FirebaseAuth extends AuthService {
 	constructor( emulator?: EmulatorConfig ) {
 		super()
 		if ( emulator ) FirebaseHelper.useEmulator( emulator )
@@ -79,6 +83,10 @@ export class FirebaseAuth extends AuthService<UserCredential> {
 		})
 	}
 
+	linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials> {
+		return this.credentialProviders[ provider ]() as any
+	}
+
 	private async toUserCredentials( nativeUserCredential: User ): Promise< UserCredentials > {
 		if ( !nativeUserCredential ) return null
 		
@@ -105,6 +113,10 @@ export class FirebaseAuth extends AuthService<UserCredential> {
 		})
 	}
 
+	registerCredentialProvider( name: string, providerFactory: ( singData?: SignData ) => Promise<UserCredential> ) {
+		this.credentialProviders[ name ] = providerFactory		
+	}
+
 	private registerCredentialProviders() {
 		this.registerCredentialProvider( 'email-sign-up', signData => createUserWithEmailAndPassword( 
 			FirebaseHelper.instance.auth(), signData.email, signData.password 
@@ -121,8 +133,13 @@ export class FirebaseAuth extends AuthService<UserCredential> {
 		this.registerCredentialProvider( 'twitter', () => signInWithPopup(
 			FirebaseHelper.instance.auth(), new TwitterAuthProvider()
 		))
+		this.registerCredentialProvider( 'link-twitter', () => linkWithPopup(
+			FirebaseHelper.instance.auth().currentUser, new TwitterAuthProvider()
+		))
 		this.registerCredentialProvider( 'anonymous', () => signInAnonymously(
 			FirebaseHelper.instance.auth()
 		))
 	}
+
+	private credentialProviders: CredentialProviders = {}
 }
