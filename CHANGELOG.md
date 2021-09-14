@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.4.1...v1.5.0) (2021-09-10)
+
+
+### Features
+
+* twitter signup ([74069f2](https://github.com/entropic-bond/entropic-bond-firebase/commit/74069f256712426a4e32fdf843d5f3db505904e0))
+
 ## [1.4.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.4.0...v1.4.1) (2021-09-02)
 
 
