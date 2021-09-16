@@ -1,11 +1,16 @@
-import { AdditionalProvider, SignData, UserCredentials } from 'entropic-bond'
-import { AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
-import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, User, UserCredential } from 'firebase/auth'
+import { AuthProvider, SignData, UserCredentials, AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
+import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, unlink, User, UserCredential } from 'firebase/auth'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 import { camelCase } from '../utils/utils'
 
 interface CredentialProviders {
 	[ name: string ]: ( signData?: SignData ) => Promise<any>
+}
+
+const providerFactory = {
+	'twitter': () => new TwitterAuthProvider(),
+	'facebook': () => new FacebookAuthProvider(),
+	'google': () => new GoogleAuthProvider()
 }
 
 export class FirebaseAuth extends AuthService {
@@ -83,8 +88,16 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
-	linkAdditionalProvider( provider: AdditionalProvider ): Promise<UserCredentials> {
-		return this.credentialProviders[ provider ]() as any
+	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
+		const providerInstance = providerFactory[ provider ]()
+		const currentUser = FirebaseHelper.instance.auth().currentUser
+
+		return linkWithPopup( currentUser, providerInstance )
+	}
+
+	unlinkProvider( provider: AuthProvider ): Promise<unknown> {
+		const { currentUser } = FirebaseHelper.instance.auth()
+		return unlink( currentUser, providerFactory[ provider ]() )
 	}
 
 	private async toUserCredentials( nativeUserCredential: User ): Promise< UserCredentials > {
@@ -117,7 +130,7 @@ export class FirebaseAuth extends AuthService {
 		this.credentialProviders[ name ] = providerFactory		
 	}
 
-	private registerCredentialProviders() {
+	private registerCredentialProviders() { //TODO: refactor. Not needed anymore
 		this.registerCredentialProvider( 'email-sign-up', signData => createUserWithEmailAndPassword( 
 			FirebaseHelper.instance.auth(), signData.email, signData.password 
 		))
