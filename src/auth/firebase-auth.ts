@@ -97,7 +97,8 @@ export class FirebaseAuth extends AuthService {
 
 	unlinkProvider( provider: AuthProvider ): Promise<unknown> {
 		const { currentUser } = FirebaseHelper.instance.auth()
-		return unlink( currentUser, providerFactory[ provider ]() )
+		currentUser.providerData
+		return unlink( currentUser, providerFactory[ provider ]().providerId )
 	}
 
 	private async toUserCredentials( nativeUserCredential: User ): Promise< UserCredentials > {
