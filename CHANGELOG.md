@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.2...v1.5.3) (2021-09-16)
+
+
+### Bug Fixes
+
+* providerId ([556abb3](https://github.com/entropic-bond/entropic-bond-firebase/commit/556abb31f3d26f2c015338d6624f35aaa3502c91))
+
 ## [1.5.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.1...v1.5.2) (2021-09-16)
 
 
