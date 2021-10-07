@@ -44,7 +44,6 @@ export class FirebaseDatasource extends DataSource {
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
 		const db = FirebaseHelper.instance.firestore()
-		let queryRef = query( collection( db, collectionName ) )
 
 		const constraints: QueryConstraint[] = DataSource.toPropertyPathOperations( 
 			queryObject.operations as any 
