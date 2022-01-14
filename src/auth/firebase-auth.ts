@@ -1,7 +1,6 @@
-import { AuthProvider, SignData, UserCredentials, AuthService, RejectedCallback, ResovedCallback, AuthErrorCode } from 'entropic-bond'
+import { AuthProvider, SignData, UserCredentials, AuthService, RejectedCallback, ResovedCallback, AuthErrorCode, camelCase } from 'entropic-bond'
 import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, unlink, User, UserCredential } from 'firebase/auth'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
-import { camelCase } from '../utils/utils'
 
 interface CredentialProviders {
 	[ name: string ]: ( signData?: SignData ) => Promise<any>
