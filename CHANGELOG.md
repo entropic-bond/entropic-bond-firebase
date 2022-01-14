@@ -1,3 +1,12 @@
+## [1.5.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.3...v1.5.4) (2022-01-14)
+
+
+### Bug Fixes
+
+* npm update ([243e0f9](https://github.com/entropic-bond/entropic-bond-firebase/commit/243e0f97c0c8acb25a474c58e1c4e7d1c0beb213))
+* remove utils ([4fba5a4](https://github.com/entropic-bond/entropic-bond-firebase/commit/4fba5a401263f62e7fd9a147fcc491ae1fbb4732))
+* update node for CI ([00158d6](https://github.com/entropic-bond/entropic-bond-firebase/commit/00158d60941a4393a8ee1373548e7e42ff6d9289))
+
 ## [1.5.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.2...v1.5.3) (2021-09-16)
 
 
