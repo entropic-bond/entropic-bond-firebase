@@ -1,3 +1,10 @@
+## [1.5.5](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.4...v1.5.5) (2022-03-01)
+
+
+### Bug Fixes
+
+* introduce measurementId in FirebaseConfig ([98e8023](https://github.com/entropic-bond/entropic-bond-firebase/commit/98e8023afdccb7ca3b9d55db1189d67d7e32deab))
+
 ## [1.5.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.3...v1.5.4) (2022-01-14)
 
 
