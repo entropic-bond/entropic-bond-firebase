@@ -1,5 +1,5 @@
 import { AuthProvider, SignData, UserCredentials, AuthService, RejectedCallback, ResovedCallback, AuthErrorCode, camelCase } from 'entropic-bond'
-import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, unlink, User, UserCredential } from 'firebase/auth'
+import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, linkWithPopup, sendEmailVerification, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, TwitterAuthProvider, updateProfile, unlink, User, UserCredential, sendPasswordResetEmail } from 'firebase/auth'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 
 interface CredentialProviders {
@@ -79,6 +79,10 @@ export class FirebaseAuth extends AuthService {
 
 	logout(): Promise<void> {
 		return FirebaseHelper.instance.auth().signOut()
+	}
+
+	resetEmailPassword( email: string ) {
+		return sendPasswordResetEmail( FirebaseHelper.instance.auth(), email )
 	}
 
 	onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ) {
