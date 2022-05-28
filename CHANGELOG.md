@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.0...v1.6.1) (2022-05-28)
+
+
+### Bug Fixes
+
+* upgrade ts@4.7 and jest@28 ([5ac87df](https://github.com/entropic-bond/entropic-bond-firebase/commit/5ac87df4d759e005b39074256147d42f034fc35d))
+
 # [1.6.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.5...v1.6.0) (2022-04-08)
 
 
