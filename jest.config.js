@@ -23,5 +23,6 @@ module.exports = {
 	collectCoverage: true,
 	coverageDirectory: "coverage",
 	collectCoverageFrom: ['src/**/*.ts','!src/*/*.spec.ts'],
-	coverageReporters: ["lcov"],																																														// cSpell: disable-line
+	coverageReporters: ["lcov"],																														// cSpell: disable-line
+	testEnvironment: 'node'
 }
