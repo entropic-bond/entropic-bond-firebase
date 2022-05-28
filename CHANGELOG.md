@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.5...v1.6.0) (2022-04-08)
+
+
+### Features
+
+* reset password ([efbb623](https://github.com/entropic-bond/entropic-bond-firebase/commit/efbb623cc359d675faae21f9e936eb87b8499018))
+
 ## [1.5.5](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.5.4...v1.5.5) (2022-03-01)
 
 
