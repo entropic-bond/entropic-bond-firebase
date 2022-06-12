@@ -43,9 +43,9 @@ describe( 'Firestore Model', ()=>{
 
 	afterEach( async ()=>{
 		terminate( FirebaseHelper.instance.firestore() )
-		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
-			method: 'DELETE'
-		})
+		// await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
+		// 	method: 'DELETE'
+		// })
 	})
 
 	it( 'should find document by id', async ()=>{
@@ -405,6 +405,25 @@ describe( 'Firestore Model', ()=>{
 				expect( docs ).toHaveLength( 0 )
 			})
 
+		})
+	})
+
+	describe( 'SubCollections', ()=>{
+		let model: Model<SubClass>
+	
+		beforeEach(()=>{
+			model = Store.getModelForSubCollection( testUser, 'SubClass' )
+		})
+	
+		it( 'should retrieve from subcollection', async ()=>{
+			const subClass = new SubClass()
+			subClass.year = 3452
+
+			await model.save( subClass )
+
+			const loaded = await model.findById( subClass.id )
+
+			expect( loaded.year ).toBe( 3452 )
 		})
 	})
 
