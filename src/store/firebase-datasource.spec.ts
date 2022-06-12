@@ -43,9 +43,9 @@ describe( 'Firestore Model', ()=>{
 
 	afterEach( async ()=>{
 		terminate( FirebaseHelper.instance.firestore() )
-		// await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
-		// 	method: 'DELETE'
-		// })
+		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
+			method: 'DELETE'
+		})
 	})
 
 	it( 'should find document by id', async ()=>{
