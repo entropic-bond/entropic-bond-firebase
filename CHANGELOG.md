@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.3...v1.6.4) (2022-06-25)
+
+
+### Bug Fixes
+
+* resetEmailPassword promise not failing ([0584747](https://github.com/entropic-bond/entropic-bond-firebase/commit/058474729251866580d6b2c03be4ce73056fdd95))
+
 ## [1.6.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.2...v1.6.3) (2022-06-25)
 
 
