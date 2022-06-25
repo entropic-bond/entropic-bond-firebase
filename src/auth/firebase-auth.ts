@@ -82,15 +82,18 @@ export class FirebaseAuth extends AuthService {
 	}
 
 	resetEmailPassword( email: string ) {
-		try {
-			return sendPasswordResetEmail( FirebaseHelper.instance.auth(), email )
-		}
-		catch( error ) {
-			return Promise.reject({
-				code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode,
-				message: error.message
-			})
-		}
+		return new Promise<void>( async ( resolve, reject ) => {
+			try {
+				await sendPasswordResetEmail( FirebaseHelper.instance.auth(), email )
+				resolve()
+			}
+			catch( error ) {
+				reject({
+					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode,
+					message: error.message
+				})
+			}
+		})
 	}
 
 	onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ) {
