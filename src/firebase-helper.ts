@@ -2,6 +2,7 @@ import { FirebaseApp, initializeApp } from "firebase/app"
 import { CollectionReference, DocumentData, getFirestore, Query } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
+import { getFunctions } from 'firebase/functions'
 
 export type FirebaseQuery = CollectionReference<DocumentData> 
 							| Query<DocumentData>
@@ -22,6 +23,7 @@ export interface EmulatorConfig {
 	firestorePort?: number
 	storagePort?: number
 	authPort?: number
+	functionsPort?: number
 	emulate?: boolean
 }
 
@@ -37,6 +39,7 @@ export class FirebaseHelper {
 			firestorePort: 8080,
 			storagePort: 9199,
 			authPort: 9099,
+			functionsPort: 5001,
 			emulate: true
 		}
 
@@ -69,6 +72,10 @@ export class FirebaseHelper {
 
 	auth() {
 		return getAuth( this._firebaseApp )
+	}
+
+	functions() {
+		return getFunctions( this._firebaseApp )
 	}
 
 	private static _instance: FirebaseHelper
