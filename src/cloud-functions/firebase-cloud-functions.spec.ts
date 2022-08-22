@@ -11,11 +11,13 @@ describe( 'Cloud functions', ()=>{
 		})
 		
 		FirebaseHelper.useEmulator()
-		CloudFunctions.useCloudFunctionsService( new FirebaseCloudFunctions() )
+		CloudFunctions.useCloudFunctionsService( 
+			new FirebaseCloudFunctions({ emulate: true }, 'europe-west1' )
+		)
 	})
 
 	it( 'should call cloud function', async ()=>{
 		const testCallable = CloudFunctions.instance.getFunction( 'testCallable' )
-		expect( await testCallable({ test: 'test', age: 3 }) ).resolves.toEqual({ test: 'test', age: 3 })
+		expect( await testCallable({ test: 'test', age: 3 }) ).toEqual({ data: { test: 'test', age: 3 }})
 	})
 })

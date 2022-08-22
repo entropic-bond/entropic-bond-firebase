@@ -75,11 +75,16 @@ export class FirebaseHelper {
 	}
 
 	functions() {
-		return getFunctions( this._firebaseApp )
+		return getFunctions( this._firebaseApp, FirebaseHelper._region )
+	}
+
+	static setRegion( region: string ) {
+		this._region = region
 	}
 
 	private static _instance: FirebaseHelper
 	private static _firebaseConfig: FirebaseConfig
 	private static _emulatorConfig: EmulatorConfig
+	private static _region: string
 	private _firebaseApp: FirebaseApp
 }

@@ -3,7 +3,8 @@ import { connectFunctionsEmulator, httpsCallable } from 'firebase/functions'
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 
 export class FirebaseCloudFunctions implements CloudFunctionsService {
-	constructor( emulator?: EmulatorConfig ) {
+	constructor( emulator?: EmulatorConfig, region?: string ) {
+		if ( region ) FirebaseHelper.setRegion( region )
 		if ( emulator ) FirebaseHelper.useEmulator( emulator )
 		
 		if ( FirebaseHelper.emulator?.emulate ) {
