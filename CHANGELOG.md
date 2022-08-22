@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.0...v1.7.1) (2022-08-22)
+
+
+### Bug Fixes
+
+* export cloud functions ([4f72d86](https://github.com/entropic-bond/entropic-bond-firebase/commit/4f72d865a90451b3547b98f0fbb1a299d3c788cb))
+
 # [1.7.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.4...v1.7.0) (2022-08-22)
 
 
