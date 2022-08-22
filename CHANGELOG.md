@@ -1,3 +1,15 @@
+# [1.7.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.4...v1.7.0) (2022-08-22)
+
+
+### Bug Fixes
+
+* testing cloud functions in deployment fails ([1fc6693](https://github.com/entropic-bond/entropic-bond-firebase/commit/1fc669324c327023b5e2c2d0866c154bf17d87bb))
+
+
+### Features
+
+* cloud functions ([2b06883](https://github.com/entropic-bond/entropic-bond-firebase/commit/2b068836d3cfb6c54d83889a3fb4e68d3954c1f3))
+
 ## [1.6.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.6.3...v1.6.4) (2022-06-25)
 
 
