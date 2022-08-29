@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.1...v1.7.2) (2022-08-22)
+
+
+### Bug Fixes
+
+* only build functions on test ([4985cb0](https://github.com/entropic-bond/entropic-bond-firebase/commit/4985cb0c7891acc1c244875bf85a9011c65d4ab1))
+
 ## [1.7.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.0...v1.7.1) (2022-08-22)
 
 
