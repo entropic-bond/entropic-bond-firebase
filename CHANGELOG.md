@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.2...v1.7.3) (2022-10-05)
+
+
+### Bug Fixes
+
+* change parameter order in FirebaseCloudFunctions constructor ([c857a99](https://github.com/entropic-bond/entropic-bond-firebase/commit/c857a99847cee156aac3e855e5cd0cfd99a23c9d))
+
 ## [1.7.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.1...v1.7.2) (2022-08-22)
 
 
