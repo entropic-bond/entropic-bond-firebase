@@ -12,7 +12,7 @@ describe( 'Cloud functions', ()=>{
 		
 		FirebaseHelper.useEmulator()
 		CloudFunctions.useCloudFunctionsService( 
-			new FirebaseCloudFunctions({ emulate: true }, 'europe-west1' )
+			new FirebaseCloudFunctions( 'europe-west1', { emulate: true })
 		)
 	})
 
