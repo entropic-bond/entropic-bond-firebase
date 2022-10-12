@@ -115,7 +115,7 @@ export class FirebaseAuth extends AuthService {
 		return unlink( currentUser, providerFactory[ provider ]().providerId )
 	}
 
-	private async toUserCredentials<T>( nativeUserCredential: User ): Promise< UserCredentials<T> > {
+	private async toUserCredentials<T>( nativeUserCredential: User ): Promise<UserCredentials<T>> {
 		if ( !nativeUserCredential ) return null
 		
 		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims as T
