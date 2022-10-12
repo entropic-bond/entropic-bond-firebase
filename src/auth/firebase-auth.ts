@@ -96,7 +96,7 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
-	onAuthStateChange( onChange: (userCredentials: UserCredentials) => void ) {
+	onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ) {
 		FirebaseHelper.instance.auth().onAuthStateChanged( async credentials =>{
 			onChange( await this.toUserCredentials( credentials ) )
 		})
