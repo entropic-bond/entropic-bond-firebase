@@ -25,11 +25,11 @@ export class FirebaseAuth extends AuthService {
 		this.registerCredentialProviders()
 	}
 
-	signUp( signData: SignData ): Promise<UserCredentials> {
+	signUp<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
 		const { authProvider, verificationLink } = signData
 	
 		if ( authProvider.slice( 0, 5 ) === 'email' ) {
-			return new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
+			return new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 				try {
 					const credentialFactory = this.credentialProviders[ 'email-sign-up' ]
 					const userCredentials = await credentialFactory( signData )
@@ -59,14 +59,14 @@ export class FirebaseAuth extends AuthService {
 		else return this.login( signData )
 	}
 
-	login( signData: SignData ): Promise<UserCredentials> {
+	login<T extends {}>( signData: SignData ): Promise<UserCredentials<T>> {
 		const { authProvider } = signData
 
-		return new Promise<UserCredentials>( async ( resolve: ResovedCallback, reject: RejectedCallback ) => {
+		return new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 			try {
 				const credentialFactory = this.credentialProviders[ authProvider ]
 				const userCredentials = await credentialFactory( signData )
-				resolve( await this.toUserCredentials( userCredentials.user ) )
+				resolve( await this.toUserCredentials<T>( userCredentials.user ) )
 			}
 			catch( error ) {
 				reject({ 
@@ -115,15 +115,15 @@ export class FirebaseAuth extends AuthService {
 		return unlink( currentUser, providerFactory[ provider ]().providerId )
 	}
 
-	private async toUserCredentials( nativeUserCredential: User ): Promise< UserCredentials > {
+	private async toUserCredentials<T>( nativeUserCredential: User ): Promise< UserCredentials<T> > {
 		if ( !nativeUserCredential ) return null
 		
-		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims
+		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims as T
 
-		return FirebaseAuth.convertCredentials( nativeUserCredential, claims )
+		return FirebaseAuth.convertCredentials<T>( nativeUserCredential, claims )
 	}
 
-	static convertCredentials( nativeUserCredential: User, claims: {[key:string]:any} ): UserCredentials {
+	static convertCredentials<T>( nativeUserCredential: User, claims: T ): UserCredentials<T> {
 		return ({
 			id: nativeUserCredential.uid,
 			email: nativeUserCredential.email,
@@ -131,11 +131,7 @@ export class FirebaseAuth extends AuthService {
 			pictureUrl: nativeUserCredential.photoURL,
 			phoneNumber: nativeUserCredential.phoneNumber,
 			emailVerified: nativeUserCredential.emailVerified,
-			customData: {
-				planExpireDate: claims.planExpireDate,
-				subscriptionPlan: claims.subscriptionPlan,
-				gdprConsent: claims.gdprConsent
-			},
+			customData: {...claims},
 			lastLogin: Date.now(),
 			creationDate: new Date( nativeUserCredential.metadata.creationTime ).getTime()
 		})
