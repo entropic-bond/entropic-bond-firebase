@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.3...v1.7.4) (2022-10-12)
+
+
+### Bug Fixes
+
+* implement generic custom claims ([90267ac](https://github.com/entropic-bond/entropic-bond-firebase/commit/90267ac882f939c0170aa5d09caab0a09822ff0b))
+
 ## [1.7.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.2...v1.7.3) (2022-10-05)
 
 
