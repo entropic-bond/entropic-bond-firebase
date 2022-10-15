@@ -14,7 +14,12 @@ export class FirebaseCloudFunctions implements CloudFunctionsService {
 
 	}
 
-	getFunction<P, R>( cloudFunction: string ): CloudFunction<P, R> {
+	retrieveFunction<P, R>( cloudFunction: string ): CloudFunction<P, R> {
 		return httpsCallable<P,R>( FirebaseHelper.instance.functions(), cloudFunction ) as unknown as CloudFunction<P, R>
+	}
+
+	async callFunction<P, R>( func: CloudFunction<P, R>, params: P ): Promise<R> {
+		const res = await func( params ) as any
+		return res.data
 	}
 }

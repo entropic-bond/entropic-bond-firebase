@@ -1,6 +1,18 @@
-import { CloudFunctions } from 'entropic-bond'
+import { CloudFunctions, Persistent, persistent, registerPersistentClass } from 'entropic-bond'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseCloudFunctions } from './firebase-cloud-functions'
+
+@registerPersistentClass( 'ParamWrapper' )
+export class ParamWrapper extends Persistent {
+	constructor( a?: string, b?: number ) {
+		super()
+		this._a = a
+		this._b = b
+	}
+	@persistent _a: string
+	@persistent _b: number
+}
+
 
 describe( 'Cloud functions', ()=>{
 
@@ -17,7 +29,13 @@ describe( 'Cloud functions', ()=>{
 	})
 
 	it( 'should call cloud function', async ()=>{
-		const testCallable = CloudFunctions.instance.getFunction( 'testCallable' )
-		expect( await testCallable({ test: 'test', age: 3 }) ).toEqual({ data: { test: 'test', age: 3 }})
+		const testCallable = CloudFunctions.instance.getFunction<ParamWrapper, ParamWrapper>( 'testCallable' )
+		const paramWrapper = new ParamWrapper( 'test', 30 )
+
+		const a = paramWrapper.toObject()
+		
+		const result = await testCallable( paramWrapper )
+		expect( result._a ).toEqual( 'test' )
+		expect( result._b ).toEqual( 30 )
 	})
 })
