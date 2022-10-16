@@ -22,9 +22,13 @@ export const test = functions.https.onRequest((_req, res) => {
   res.send('Hello from Firebase!')
 })
 
-export const testCallable = functions.https.onCall( 
+export const testCallablePersistent = functions.https.onCall( 
 	( param: PersistentObject<ParamWrapper> ) => {
 		Persistent.registerFactory( 'ParamWrapper', ParamWrapper )
 		return param
 	}
+)
+
+export const testCallablePlain = functions.https.onCall( 
+	( param: string ) => param.length
 )

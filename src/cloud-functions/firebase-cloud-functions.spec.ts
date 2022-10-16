@@ -13,7 +13,6 @@ export class ParamWrapper extends Persistent {
 	@persistent _b: number
 }
 
-
 describe( 'Cloud functions', ()=>{
 
 	beforeEach(()=>{
@@ -28,13 +27,20 @@ describe( 'Cloud functions', ()=>{
 		)
 	})
 
-	it( 'should call cloud function', async ()=>{
-		const testCallable = CloudFunctions.instance.getFunction<ParamWrapper, ParamWrapper>( 'testCallable' )
+	it( 'should call cloud functions with plain types', async ()=>{
+		const testCallablePlain = CloudFunctions.instance.getFunction<string, number>( 'testCallablePlain' )
+		const result = await testCallablePlain( 'Hello' )
+
+		expect( result ).toBe( 5 )
+	})
+	
+	it( 'should call cloud function for Persistent', async ()=>{
+		const testCallablePersistent = CloudFunctions.instance.getFunction<ParamWrapper, ParamWrapper>( 'testCallablePersistent' )
 		const paramWrapper = new ParamWrapper( 'test', 30 )
 
 		const a = paramWrapper.toObject()
-		
-		const result = await testCallable( paramWrapper )
+
+		const result = await testCallablePersistent( paramWrapper )
 		expect( result._a ).toEqual( 'test' )
 		expect( result._b ).toEqual( 30 )
 	})

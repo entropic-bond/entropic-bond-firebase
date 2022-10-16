@@ -60,7 +60,7 @@
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.34.8",
+    "entropic-bond": "^1.34.9",
     "firebase": "^9.12.1"
   },
   "husky": {
