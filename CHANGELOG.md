@@ -1,3 +1,10 @@
+## [1.7.6](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.5...v1.7.6) (2022-10-15)
+
+
+### Bug Fixes
+
+* retrieveFunction and callFunction ([22bb6bc](https://github.com/entropic-bond/entropic-bond-firebase/commit/22bb6bc3f5d7d78afcbe5b94c634109c37d2283f))
+
 ## [1.7.5](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.4...v1.7.5) (2022-10-12)
 
 
