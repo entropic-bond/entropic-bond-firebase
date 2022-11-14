@@ -70,7 +70,7 @@ export class FirebaseAuth extends AuthService {
 			}
 			catch( error ) {
 				reject({ 
-					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode, 
+					code: error.code === 400? 'missingPassword' : camelCase( error.code.slice( 5 ) ) as AuthErrorCode, 
 					message: error.message
 				})
 			}
