@@ -1,3 +1,10 @@
+## [1.7.9](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.8...v1.7.9) (2022-11-14)
+
+
+### Bug Fixes
+
+* missing password error message code ([3335b5b](https://github.com/entropic-bond/entropic-bond-firebase/commit/3335b5bf1216eb741f9292c2f8585a84380a5364))
+
 ## [1.7.8](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.7...v1.7.8) (2022-10-17)
 
 
