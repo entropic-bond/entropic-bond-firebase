@@ -1,3 +1,10 @@
+## [1.7.8](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.7...v1.7.8) (2022-10-17)
+
+
+### Bug Fixes
+
+* update entropic-bond version ([1fd014a](https://github.com/entropic-bond/entropic-bond-firebase/commit/1fd014abb8341f0a426709d4201d0f6f99110ca5))
+
 ## [1.7.7](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.6...v1.7.7) (2022-10-16)
 
 
