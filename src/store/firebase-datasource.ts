@@ -1,4 +1,4 @@
-import { collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getDoc, getDocs, limit, orderBy, query, QueryConstraint, QueryDocumentSnapshot, startAfter, where, writeBatch } from 'firebase/firestore'
+import { collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, orderBy, Query, query, QueryConstraint, QueryDocumentSnapshot, startAfter, where, writeBatch } from 'firebase/firestore'
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
@@ -43,25 +43,15 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
-		const db = FirebaseHelper.instance.firestore()
+		const query = this.queryObjectToQueryConstraints( queryObject, collectionName )
+		return this.getFromQuery( query )
+	}
 
-		const constraints: QueryConstraint[] = DataSource.toPropertyPathOperations( 
-			queryObject.operations as any 
-		).map( operation =>	where( operation.property, operation.operator, operation.value ) )
-
-		if ( queryObject.sort ) {
-			constraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
-		}
+	async count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number> {
+		const query = this.queryObjectToQueryConstraints( queryObject, collectionName )
 		
-		this._lastConstraints = constraints
-		this._lastCollectionName = collectionName
-
-		if( queryObject.limit ) {
-			this._lastLimit = queryObject.limit
-			constraints.push( limit( queryObject.limit ) )
-		}
-
-		return this.getFromQuery( query( collection( db, collectionName ), ...constraints ) )
+		const snapShot = await getCountFromServer( query )
+		return snapShot.data().count
 	}
 
 	delete( id: string, collectionName: string ): Promise< void > {
@@ -87,6 +77,28 @@ export class FirebaseDatasource extends DataSource {
 	// prev should be used with next in reverse order
 	// prev( limit?: number ): Promise< DocumentObject[] > {
 	// }
+
+	private queryObjectToQueryConstraints( queryObject: QueryObject<DocumentObject>, collectionName: string ): Query {
+		const db = FirebaseHelper.instance.firestore()
+
+		const constraints: QueryConstraint[] = DataSource.toPropertyPathOperations( 
+			queryObject.operations as any 
+		).map( operation =>	where( operation.property, operation.operator, operation.value ) )
+
+		if ( queryObject.sort ) {
+			constraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
+		}
+		
+		this._lastConstraints = constraints
+		this._lastCollectionName = collectionName
+
+		if( queryObject.limit ) {
+			this._lastLimit = queryObject.limit
+			constraints.push( limit( queryObject.limit ) )
+		}
+
+		return query( collection( db, collectionName ), ...constraints )
+	}
 
 	private getFromQuery( query: FirebaseQuery ) {
 		return new Promise< DocumentObject[] >( async resolve => {

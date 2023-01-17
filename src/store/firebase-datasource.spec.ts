@@ -384,6 +384,11 @@ describe( 'Firestore Model', ()=>{
 			expect( docs[ 1 ].id ).toEqual( 'user1' )
 		})
 
+		it( 'should count documents in collection', async ()=>{
+			expect( await model.find().count() ).toBe( 6 )
+		})
+		
+
 		describe( 'Data Cursors', ()=>{
 			beforeEach( async ()=>{
 				await model.find().get( 2 )
