@@ -9,7 +9,7 @@
 		"resolveJsonModule": true,
     "experimentalDecorators": true,
     "lib": [
-      "ES2021", "DOM"
+      "ES2021", "WebWorker"
     ]
   },
   "compileOnSave": false,
