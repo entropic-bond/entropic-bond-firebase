@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'

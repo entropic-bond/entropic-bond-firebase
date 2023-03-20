@@ -2,7 +2,6 @@
  * @jest-environment node
  */
  (global as any).XMLHttpRequest = require('xhr2')
-import fetch from 'node-fetch'
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
