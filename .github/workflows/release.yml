@@ -21,6 +21,8 @@ jobs:
       - run: npm run build
       - run: npm install -g firebase-tools
       - run: echo $FIREBASE_TOKEN
+      - run: echo $ACCESS_TOKEN
+      - run: npm run echo
       - run: npm test
       - run: npx semantic-release
         env:
