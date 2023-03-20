@@ -29,7 +29,6 @@
     "build-ts": "cp -r ./src/ ./lib",
     "build-cjs": "tsc -p tsconfig-cjs.json",
     "emulators": "firebase emulators:start --project demo-test",
-    "echo": "echo \"${FIREBASE_TOKEN}\"",
     "install-functions-dependencies": "cd functions && npm ci"
   },
   "repository": {
