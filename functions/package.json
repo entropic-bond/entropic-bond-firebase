@@ -8,7 +8,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "install-build": "npm ci && npm run build",
+    "install-build": "npm i && npm run build",
     "postinstall": "npm run build"
   },
   "engines": {
