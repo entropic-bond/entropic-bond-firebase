@@ -12,12 +12,12 @@
     "postinstall": "npm run build"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "^11.4.1",
-    "firebase-functions": "^4.1.1"
+    "firebase-admin": "^11.6.0",
+    "firebase-functions": "^4.2.1"
   },
   "devDependencies": {
     "typescript": "^5.0.4"
