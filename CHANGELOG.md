@@ -1,3 +1,15 @@
+## [1.8.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.0...v1.8.1) (2023-04-09)
+
+
+### Bug Fixes
+
+* remove node-fetch ([8ce4007](https://github.com/entropic-bond/entropic-bond-firebase/commit/8ce4007738b38f00fe74c5376b766a83d18ef5bd))
+
+
+### Reverts
+
+* Revert "chore(release): 1.8.0 [skip ci]" ([40f02b7](https://github.com/entropic-bond/entropic-bond-firebase/commit/40f02b7752f7818e487098174fd57842429f8c8e))
+
 ## [1.7.9](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.8...v1.7.9) (2022-11-14)
 
 
