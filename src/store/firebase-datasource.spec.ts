@@ -23,7 +23,7 @@ async function loadTestData( model: Model<TestUser> ) {
 describe( 'Firestore Model', ()=>{
 	let model: Model<TestUser>
 	let testUser: TestUser
-	const host = '127.0.0.1'
+	const host = 'localhost'
 	const firestorePort = 9080
 
 	beforeAll(()=>{
