@@ -1,17 +1,3 @@
-# [1.8.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.9...v1.8.0) (2023-01-18)
-
-
-### Bug Fixes
-
-* back to npm ([2ffe2ab](https://github.com/entropic-bond/entropic-bond-firebase/commit/2ffe2abe6292eff9409ca85a3ced2891ff84406d))
-* ci to install ([d9c07dd](https://github.com/entropic-bond/entropic-bond-firebase/commit/d9c07dd45c7ad439fc3c3e3a9ea4baeb11a69f91))
-* update npm ([f2152a7](https://github.com/entropic-bond/entropic-bond-firebase/commit/f2152a7d1869204e97f4419543065b552ca5b9a6))
-
-
-### Features
-
-* count documents in collection ([cb7722b](https://github.com/entropic-bond/entropic-bond-firebase/commit/cb7722b1c12ad4986ce6bec0c1e34ecfac6ce9fd))
-
 ## [1.7.9](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.7.8...v1.7.9) (2022-11-14)
 
 
