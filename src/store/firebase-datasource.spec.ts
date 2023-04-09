@@ -18,7 +18,7 @@ describe( 'Firestore Model', ()=>{
 	let model: Model<TestUser>
 	let testUser: TestUser
 	const host = 'localhost'
-	const firestorePort = 8080
+	const firestorePort = 9080
 
 	beforeAll(()=>{
 		FirebaseHelper.setFirebaseConfig({

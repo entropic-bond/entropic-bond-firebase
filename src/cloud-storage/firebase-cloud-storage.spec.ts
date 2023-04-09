@@ -2,7 +2,6 @@
  * @jest-environment node
  */
  (global as any).XMLHttpRequest = require('xhr2')
-import fetch from 'node-fetch'
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
@@ -43,7 +42,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 		projectId: 'demo-test',
 		storageBucket: 'default-bucket'
 	})
-	FirebaseHelper.useEmulator({ firestorePort: 8080 })
+	FirebaseHelper.useEmulator({ firestorePort: 9080 })
 	Store.useDataSource( new FirebaseDatasource() )
 
 	beforeEach(()=>{
