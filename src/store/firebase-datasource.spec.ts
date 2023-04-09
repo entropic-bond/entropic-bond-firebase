@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
@@ -8,12 +7,6 @@ import { terminate } from 'firebase/firestore'
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = Object.values( mockData.TestUser )
-	// const promises = []
-	// for ( const key in users ) {
-	// 	const user = Persistent.createInstance<TestUser>( users[ key ] )
-	// 	promises.push( model.save( user ) )
-	// }
-	// await Promise.all( promises )
 	await Promise.all(
 		users.map( userObj => {
 			const user = Persistent.createInstance<TestUser>( userObj as any )
