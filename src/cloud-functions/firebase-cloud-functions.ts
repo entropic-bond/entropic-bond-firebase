@@ -9,8 +9,6 @@ export class FirebaseCloudFunctions implements CloudFunctionsService {
 		
 		if ( FirebaseHelper.emulator?.emulate ) {
 			const { host, functionsPort } = FirebaseHelper.emulator
-			if ( !host || !functionsPort ) throw new Error( `You should define a host and a functions emulator port to use the emulator` )
-
 			connectFunctionsEmulator( FirebaseHelper.instance.functions(), host, functionsPort )
 		}
 

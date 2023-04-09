@@ -9,7 +9,6 @@ export class FirebaseDatasource extends DataSource {
 		
 		if ( FirebaseHelper.emulator?.emulate ) {
 			const { host, firestorePort } = FirebaseHelper.emulator
-			if ( !host || !firestorePort ) throw new Error( `You should define a host and a firestore emulator port to use the emulator` )
 			connectFirestoreEmulator( FirebaseHelper.instance.firestore(), host, firestorePort )
 		}
 	}
