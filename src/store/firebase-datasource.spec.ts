@@ -29,7 +29,7 @@ describe( 'Firestore Model', ()=>{
 	FirebaseHelper.setFirebaseConfig({
 		projectId: "demo-test",
 	})
-	FirebaseHelper.useEmulator({ firestorePort: 9080, host: '127.0.0.1' })
+	FirebaseHelper.useEmulator({ firestorePort: 9080 })
 
 	beforeEach( async ()=>{
 		Store.useDataSource( new FirebaseDatasource() )
