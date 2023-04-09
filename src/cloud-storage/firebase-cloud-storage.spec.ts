@@ -43,7 +43,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 		projectId: 'demo-test',
 		storageBucket: 'default-bucket'
 	})
-	FirebaseHelper.useEmulator({ firestorePort: 9080 })
+	FirebaseHelper.useEmulator({ firestorePort: 8088 })
 	Store.useDataSource( new FirebaseDatasource() )
 
 	beforeEach(()=>{

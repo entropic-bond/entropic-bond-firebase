@@ -18,12 +18,13 @@ describe( 'Firestore Model', ()=>{
 	let model: Model<TestUser>
 	let testUser: TestUser
 	const host = '127.0.0.1'
+	const firestorePort = 8088
 
 	beforeAll(()=>{
 		FirebaseHelper.setFirebaseConfig({
 			projectId: "demo-test",
 		})
-		FirebaseHelper.useEmulator({ host, firestorePort: 9080 })
+		FirebaseHelper.useEmulator({ host, firestorePort })
 		Store.useDataSource( new FirebaseDatasource() )
 	})
 
@@ -43,7 +44,7 @@ describe( 'Firestore Model', ()=>{
 	})
 
 	afterEach( async ()=>{
-		await fetch( `http://${ host }:9080/emulator/v1/projects/demo-test/databases/(default)/documents`, {
+		await fetch( `http://${ host }:${ firestorePort }/emulator/v1/projects/demo-test/databases/(default)/documents`, {
 			method: 'DELETE'
 		})
 	})
