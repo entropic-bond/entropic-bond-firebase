@@ -293,13 +293,13 @@ describe( 'Firestore Model', ()=>{
 		it( 'should save a reference when declared @persistentAt', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.derived?.id ).toEqual( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toEqual( testUser.derived!.id )
 			expect( loadedUser?.derived?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser!.derived! )
 
 			expect( loadedUser?.derived?.salary ).toBe( 1350 )
-			expect( loadedUser?.derived?.id ).toBe( testUser.derived?.id )
+			expect( loadedUser?.derived?.id ).toBe( testUser.derived!.id )
 		})
 
 		it( 'should populate from special collection when declared with @persistentRefAt', async ()=>{
@@ -313,14 +313,14 @@ describe( 'Firestore Model', ()=>{
 		it( 'should save a reference when declared @persistentAt as array', async ()=>{
 			const loadedUser = await model.findById( testUser.id )
 
-			expect( loadedUser?.manyDerived?.[0]?.id ).toEqual( testUser.manyDerived?.[0]?.id )
+			expect( loadedUser?.manyDerived?.[0]?.id ).toEqual( testUser.manyDerived![0]!.id )
 			expect( loadedUser?.manyDerived?.[0]?.salary ).toBeUndefined()
 			expect( loadedUser?.manyDerived?.[1]?.salary ).toBeUndefined()
 
 			await Store.populate( loadedUser!.manyDerived! )
 
 			expect( loadedUser?.manyDerived?.[0]?.salary ).toBe( 990 )
-			expect( loadedUser?.manyDerived?.[0]?.id ).toBe( testUser.manyDerived?.[0]?.id )
+			expect( loadedUser?.manyDerived?.[0]?.id ).toBe( testUser.manyDerived![0]!.id )
 			expect( loadedUser?.manyDerived?.[1]?.salary ).toBe( 1990 )
 			expect( loadedUser?.manyDerived?.[1]?.id ).toBe( testUser.manyDerived?.[1]?.id )
 		})
@@ -339,7 +339,7 @@ describe( 'Firestore Model', ()=>{
 			loadedUser!.derived!.salary = 345
 			await model.save( loadedUser! )
 
-			const refInCollection = await model.findById<DerivedUser>( loadedUser!.derived?.id )
+			const refInCollection = await model.findById<DerivedUser>( loadedUser!.derived.id )
 			expect( refInCollection?.salary ).toBe( 345 )
 		})
 
@@ -406,7 +406,7 @@ describe( 'Firestore Model', ()=>{
 				const mockDataArr = Object.values( mockData.TestUser )
 				
 				expect( docs ).toHaveLength( 2 )
-				expect( docs[0]?.id ).toEqual( mockDataArr[2]?.id )
+				expect( docs[0]?.id ).toEqual( mockDataArr[2]!.id )
 				expect( docs[ 0 ]?.id ).toEqual( 'user3' )
 			})
 
