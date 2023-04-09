@@ -26,7 +26,7 @@ describe( 'Firestore Model', ()=>{
 		FirebaseHelper.useEmulator({ firestorePort: 9080 })
 		Store.useDataSource( new FirebaseDatasource() )
 	})
-	
+
 	beforeEach( async ()=>{
 
 		testUser = new TestUser()
@@ -43,8 +43,7 @@ describe( 'Firestore Model', ()=>{
 	})
 
 	afterEach( async ()=>{
-		// await terminate( FirebaseHelper.instance.firestore() )
-		await fetch( 'http://127.0.0.1:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
+		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
 			method: 'DELETE'
 		})
 	})
