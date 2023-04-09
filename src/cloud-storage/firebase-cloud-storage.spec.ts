@@ -6,7 +6,6 @@ import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
 import { CloudStorage, Model, Persistent, persistent, registerPersistentClass, Store, StoredFile } from 'entropic-bond'
-import fetch from 'node-fetch'
 
 // Note about tests leaking. I've been checking and looks like firebase.storage 
 // methods are the responsible for the test leaking (as firebase v. 8.6.3).

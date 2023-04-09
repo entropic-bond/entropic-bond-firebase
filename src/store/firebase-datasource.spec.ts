@@ -3,7 +3,6 @@ import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
-import fetch from 'node-fetch'
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = Object.values( mockData.TestUser )
