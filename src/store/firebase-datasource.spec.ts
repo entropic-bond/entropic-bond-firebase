@@ -1,8 +1,14 @@
+/**
+ * @jest-environment node
+ */
+import dns from 'node:dns'
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
+
+dns.setDefaultResultOrder('ipv4first')
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = Object.values( mockData.TestUser )
@@ -17,7 +23,7 @@ async function loadTestData( model: Model<TestUser> ) {
 describe( 'Firestore Model', ()=>{
 	let model: Model<TestUser>
 	let testUser: TestUser
-	const host = 'localhost'
+	const host = '127.0.0.1'
 	const firestorePort = 9080
 
 	beforeAll(()=>{
