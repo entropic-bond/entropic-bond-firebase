@@ -9,6 +9,7 @@ export class FirebaseDatasource extends DataSource {
 		
 		if ( FirebaseHelper.emulator?.emulate ) {
 			const { host, firestorePort } = FirebaseHelper.emulator
+			if ( !host || !firestorePort ) throw new Error( `You should define a host and a firestore emulator port to use the emulator` )
 			connectFirestoreEmulator( FirebaseHelper.instance.firestore(), host, firestorePort )
 		}
 	}
@@ -33,7 +34,7 @@ export class FirebaseDatasource extends DataSource {
 		const batch = writeBatch( db )
 
 		Object.entries( collections ).forEach(([ collectionName, collection ]) => {
-			collection.forEach( document => {
+			collection?.forEach( document => {
 					const ref = doc( db, collectionName, document.id )
 					batch.set( ref, document ) 
 			})
@@ -61,7 +62,7 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	next( maxDocs?: number ): Promise< DocumentObject[] > {
-		if( !this._lastConstraints ) throw new Error('You should perform a query prior to using method next')
+		if( !this._lastConstraints || !this._lastCollectionName ) throw new Error('You should perform a query prior to using method next')
 
 		const db = FirebaseHelper.instance.firestore()
 		this._lastLimit = maxDocs || this._lastLimit
@@ -85,7 +86,7 @@ export class FirebaseDatasource extends DataSource {
 			queryObject.operations as any 
 		).map( operation =>	where( operation.property, operation.operator, operation.value ) )
 
-		if ( queryObject.sort ) {
+		if ( queryObject.sort?.propertyName ) {
 			constraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
 		}
 		
@@ -109,8 +110,8 @@ export class FirebaseDatasource extends DataSource {
 		})
 	}
 
-	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData>
-	private _lastConstraints: QueryConstraint[]
-	private _lastLimit: number
-	private _lastCollectionName: string
+	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData> | undefined
+	private _lastConstraints: QueryConstraint[] | undefined
+	private _lastLimit: number = 0
+	private _lastCollectionName: string | undefined
 }

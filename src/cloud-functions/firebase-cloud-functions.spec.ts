@@ -9,8 +9,8 @@ export class ParamWrapper extends Persistent {
 		this._a = a
 		this._b = b
 	}
-	@persistent _a: string
-	@persistent _b: number
+	@persistent _a: string | undefined
+	@persistent _b: number | undefined
 }
 
 describe( 'Cloud functions', ()=>{

@@ -12,10 +12,10 @@ import { CloudStorage, Model, Persistent, persistent, registerPersistentClass, S
 // methods are the responsible for the test leaking (as firebase v. 8.6.3).
 
 class File {	
-	data: Uint8Array
-	name: string
+	data: Uint8Array | undefined
+	name: string | undefined
 	lastModified: any
-	size: number
+	size: number | undefined
 	type: any
 	arrayBuffer: any
 	slice: any
@@ -74,15 +74,15 @@ describe( 'Firebase Cloud Storage', ()=>{
 	it( 'should overwrite file on subsequent writes', async ()=>{
 		await file.save({ data:blobData1 })
 		const firstUrl = file.url
-		let resp = await fetch( file.url )
+		let resp = await fetch( file.url! )
 		expect( await resp.text() ).toEqual( 'Hello, world!')
 
 		await file.save({ data:blobData2 })
-		resp = await fetch( file.url )
+		resp = await fetch( file.url! )
 		expect( 
-			file.url.slice( 0, file.url.indexOf('token') ) 
+			file.url?.slice( 0, file.url.indexOf('token') ) 
 		).toEqual( 
-			firstUrl.slice( 0, firstUrl.indexOf('token') ) 
+			firstUrl?.slice( 0, firstUrl.indexOf('token') ) 
 		)
 		expect( await resp.text() ).toEqual( 'llo,He world!')
 	})
@@ -113,8 +113,8 @@ describe( 'Firebase Cloud Storage', ()=>{
 
 			const newTestObj = await model.findById( testObj.id )
 
-			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toContain( testObj.file.id )
+			expect( newTestObj?.file ).toBeInstanceOf( StoredFile )
+			expect( newTestObj?.file.url ).toContain( testObj.file.id )
 		})
 
 		it( 'should replace file on save after load', async ()=>{
@@ -125,8 +125,8 @@ describe( 'Firebase Cloud Storage', ()=>{
 
 			const newTestObj = await model.findById( testObj.id )
 
-			expect( newTestObj.file ).toBeInstanceOf( StoredFile )
-			expect( newTestObj.file.url ).toContain( testObj.file.id )
+			expect( newTestObj?.file ).toBeInstanceOf( StoredFile )
+			expect( newTestObj?.file.url ).toContain( testObj.file.id )
 			expect( deleteSpy ).not.toHaveBeenCalled()
 
 			testObj.file.setDataToStore( blobData2 )
