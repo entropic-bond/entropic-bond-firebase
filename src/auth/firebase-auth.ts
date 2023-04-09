@@ -3,7 +3,7 @@ import { connectAuthEmulator, createUserWithEmailAndPassword, FacebookAuthProvid
 import { EmulatorConfig, FirebaseHelper } from '../firebase-helper'
 
 interface CredentialProviders {
-	[ name: string ]: ( signData?: SignData ) => Promise<any>
+	[ name: string ]: ( signData: SignData ) => Promise<UserCredential>
 }
 
 const providerFactory = {
@@ -19,6 +19,8 @@ export class FirebaseAuth extends AuthService {
 		
 		if ( FirebaseHelper.emulator?.emulate ) {
 			const { host, authPort } = FirebaseHelper.emulator
+			if ( !host || !authPort ) throw new Error( `You should define a host and an auth emulator port to use the emulator` )
+
 			connectAuthEmulator( FirebaseHelper.instance.auth(), `http://${ host }:${ authPort }` )
 		}
 
@@ -32,8 +34,10 @@ export class FirebaseAuth extends AuthService {
 			return new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 				try {
 					const credentialFactory = this.credentialProviders[ 'email-sign-up' ]
+					if ( !credentialFactory ) throw new Error( `The provider ${ authProvider } is not registered` )
+
 					const userCredentials = await credentialFactory( signData )
-					
+
 					if ( signData.name ) {
 						await updateProfile( userCredentials.user, {
 							displayName: signData.name
@@ -65,6 +69,7 @@ export class FirebaseAuth extends AuthService {
 		return new Promise<UserCredentials<T>>( async ( resolve: ResovedCallback<T>, reject: RejectedCallback ) => {
 			try {
 				const credentialFactory = this.credentialProviders[ authProvider ]
+				if ( !credentialFactory ) throw new Error( `The provider ${ authProvider } is not registered` )
 				const userCredentials = await credentialFactory( signData )
 				resolve( await this.toUserCredentials<T>( userCredentials.user ) )
 			}
@@ -96,58 +101,63 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
-	onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T>) => void ) {
+	onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ) {
 		FirebaseHelper.instance.auth().onAuthStateChanged( async credentials =>{
-			onChange( await this.toUserCredentials( credentials ) )
+			onChange( credentials? await this.toUserCredentials( credentials ) : undefined )
 		})
 	}
 
 	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
 		const providerInstance = providerFactory[ provider ]()
 		const currentUser = FirebaseHelper.instance.auth().currentUser
+		if ( !currentUser ) throw new Error( `There is no logged in user` )
 
 		return linkWithPopup( currentUser, providerInstance )
 	}
 
 	unlinkProvider( provider: AuthProvider ): Promise<unknown> {
 		const { currentUser } = FirebaseHelper.instance.auth()
+		if ( !currentUser ) throw new Error( `There is no logged in user` )
+
 		currentUser.providerData
 		return unlink( currentUser, providerFactory[ provider ]().providerId )
 	}
 
-	private async toUserCredentials<T>( nativeUserCredential: User ): Promise<UserCredentials<T>> {
-		if ( !nativeUserCredential ) return null
+	private async toUserCredentials<T extends {}>( nativeUserCredential: User ): Promise<UserCredentials<T>> {
+		if ( !nativeUserCredential ) throw new Error( `The user in user credentials is not defined` )
 		
 		const claims = ( await nativeUserCredential.getIdTokenResult() ).claims as T
 
 		return FirebaseAuth.convertCredentials<T>( nativeUserCredential, claims )
 	}
 
-	static convertCredentials<T>( nativeUserCredential: User, claims: T ): UserCredentials<T> {
+	static convertCredentials<T extends {}>( nativeUserCredential: User, claims: T ): UserCredentials<T> {
 		return ({
 			id: nativeUserCredential.uid,
-			email: nativeUserCredential.email,
-			name: nativeUserCredential.displayName,
-			pictureUrl: nativeUserCredential.photoURL,
-			phoneNumber: nativeUserCredential.phoneNumber,
+			email: nativeUserCredential.email ?? '',
+			name: nativeUserCredential.displayName ?? undefined,
+			pictureUrl: nativeUserCredential.photoURL ?? undefined,
+			phoneNumber: nativeUserCredential.phoneNumber ?? undefined,
 			emailVerified: nativeUserCredential.emailVerified,
 			customData: {...claims},
 			lastLogin: Date.now(),
-			creationDate: new Date( nativeUserCredential.metadata.creationTime ).getTime()
+			creationDate: nativeUserCredential.metadata.creationTime? new Date( nativeUserCredential.metadata.creationTime ).getTime() : undefined,
 		})
 	}
 
-	registerCredentialProvider( name: string, providerFactory: ( singData?: SignData ) => Promise<UserCredential> ) {
+	registerCredentialProvider( name: string, providerFactory: ( singData: SignData ) => Promise<UserCredential> ) {
 		this.credentialProviders[ name ] = providerFactory		
 	}
 
 	private registerCredentialProviders() { //TODO: refactor. Not needed anymore
-		this.registerCredentialProvider( 'email-sign-up', signData => createUserWithEmailAndPassword( 
-			FirebaseHelper.instance.auth(), signData.email, signData.password 
-		))
-		this.registerCredentialProvider( 'email', signData => signInWithEmailAndPassword(
-			FirebaseHelper.instance.auth(), signData.email, signData.password
-		))
+		this.registerCredentialProvider( 'email-sign-up', signData => {
+			if ( !signData.email || !signData.password ) throw new Error( `Email and password are required` )
+			return createUserWithEmailAndPassword(	FirebaseHelper.instance.auth(), signData.email, signData.password )
+		})
+		this.registerCredentialProvider( 'email', signData => {
+			if ( !signData.email || !signData.password ) throw new Error( `Email and password are required` )
+			return signInWithEmailAndPassword( FirebaseHelper.instance.auth(), signData.email, signData.password )
+		})
 		this.registerCredentialProvider( 'google', () => signInWithPopup(
 			FirebaseHelper.instance.auth(), new GoogleAuthProvider()
 		))
@@ -157,9 +167,11 @@ export class FirebaseAuth extends AuthService {
 		this.registerCredentialProvider( 'twitter', () => signInWithPopup(
 			FirebaseHelper.instance.auth(), new TwitterAuthProvider()
 		))
-		this.registerCredentialProvider( 'link-twitter', () => linkWithPopup(
-			FirebaseHelper.instance.auth().currentUser, new TwitterAuthProvider()
-		))
+		this.registerCredentialProvider( 'link-twitter', () => {
+			const currentUser = FirebaseHelper.instance.auth().currentUser
+			if ( !currentUser ) throw new Error( `There is no logged in user` )
+			return linkWithPopup(	currentUser, new TwitterAuthProvider() )
+		})
 		this.registerCredentialProvider( 'anonymous', () => signInAnonymously(
 			FirebaseHelper.instance.auth()
 		))

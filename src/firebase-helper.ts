@@ -19,12 +19,12 @@ export interface FirebaseConfig {
 }
 
 export interface EmulatorConfig {
-	host?: string
-	firestorePort?: number
-	storagePort?: number
-	authPort?: number
-	functionsPort?: number
-	emulate?: boolean
+	host: string
+	firestorePort: number
+	storagePort: number
+	authPort: number
+	functionsPort: number
+	emulate: boolean
 }
 
 export class FirebaseHelper {
@@ -33,18 +33,19 @@ export class FirebaseHelper {
 		FirebaseHelper._firebaseConfig = config
 	}
 
-	static useEmulator( emulatorConfig?: EmulatorConfig ) {
-		const defaultConfig = {
-			host: 'localhost',
-			firestorePort: 8080,
-			storagePort: 9199,
-			authPort: 9099,
-			functionsPort: 5001,
-			emulate: true
-		}
+	private static defaultEmulatorConfig = {
+		host: 'localhost',
+		firestorePort: 8080,
+		storagePort: 9199,
+		authPort: 9099,
+		functionsPort: 5001,
+		emulate: true
+	}
+
+	static useEmulator( emulatorConfig?: Partial<EmulatorConfig> ) {
 
 		this._emulatorConfig = {
-			...defaultConfig,
+			...FirebaseHelper.defaultEmulatorConfig,
 			...emulatorConfig
 		}
 	}
@@ -84,7 +85,7 @@ export class FirebaseHelper {
 
 	private static _instance: FirebaseHelper
 	private static _firebaseConfig: FirebaseConfig
-	private static _emulatorConfig: EmulatorConfig
+	private static _emulatorConfig: EmulatorConfig = FirebaseHelper.defaultEmulatorConfig
 	private static _region: string
 	private _firebaseApp: FirebaseApp
 }

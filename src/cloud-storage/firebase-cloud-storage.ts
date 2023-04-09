@@ -37,18 +37,20 @@ export class FirebaseCloudStorage extends CloudStorage {
 	}
 
 	getUrl( reference: string ): Promise<string> {
-		if ( !reference ) return Promise.resolve( undefined )
+		if ( !reference ) return Promise.reject( 'needs a reference' )
 
 		const storage = FirebaseHelper.instance.storage()
 		return getDownloadURL( ref( storage, reference ) )
 	}
 
 	uploadControl(): UploadControl {
+		if ( !this._uploadTask ) throw new Error( `You should call save() before uploadControl()` )
+
 		return {
-			cancel: ()=>this._uploadTask.cancel(),
-			pause: ()=>this._uploadTask.pause(),
-			resume: ()=>this._uploadTask.resume(),
-			onProgress: ( callback )=> this._uploadTask.on( 'state_changed', snapShot => {
+			cancel: ()=>this._uploadTask?.cancel(),
+			pause: ()=>this._uploadTask?.pause(),
+			resume: ()=>this._uploadTask?.resume(),
+			onProgress: ( callback )=> this._uploadTask?.on( 'state_changed', snapShot => {
 				if ( callback ) {
 					callback( snapShot.bytesTransferred, snapShot.totalBytes )
 				}
@@ -61,5 +63,5 @@ export class FirebaseCloudStorage extends CloudStorage {
 		return deleteObject( ref( storage, reference ) )
 	}
 
-	private _uploadTask: UploadTask
+	private _uploadTask: UploadTask | undefined
 }
