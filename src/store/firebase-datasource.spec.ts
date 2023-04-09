@@ -275,10 +275,10 @@ describe( 'Firestore Model', ()=>{
 			
 			expect( loadedUser?.manyRefs ).toHaveLength( 2 )
 			expect( loadedUser?.manyRefs[0] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]?.id )
+			expect( loadedUser?.manyRefs[0]?.id ).toEqual( testUser.manyRefs[0]!.id )
 			expect( loadedUser?.manyRefs[0]?.year ).toBeUndefined()
 			expect( loadedUser?.manyRefs[1] ).toBeInstanceOf( SubClass )
-			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]?.id )
+			expect( loadedUser?.manyRefs[1]?.id ).toEqual( testUser.manyRefs[1]!.id )
 			expect( loadedUser?.manyRefs[1]?.year ).toBeUndefined()
 		})
 
