@@ -29,7 +29,7 @@ describe( 'Firestore Model', ()=>{
 	FirebaseHelper.setFirebaseConfig({
 		projectId: "demo-test",
 	})
-	FirebaseHelper.useEmulator({ firestorePort: 9080 })
+	FirebaseHelper.useEmulator({ firestorePort: 9080, host: '127.0.0.1' })
 
 	beforeEach( async ()=>{
 		Store.useDataSource( new FirebaseDatasource() )
@@ -48,10 +48,10 @@ describe( 'Firestore Model', ()=>{
 	})
 
 	afterEach( async ()=>{
-		await terminate( FirebaseHelper.instance.firestore() )
-		await fetch( 'http://localhost:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
+		await fetch( 'http://127.0.0.1:9080/emulator/v1/projects/demo-test/databases/(default)/documents', {
 			method: 'DELETE'
 		})
+		await terminate( FirebaseHelper.instance.firestore() )
 	})
 
 	it( 'should find document by id', async ()=>{
