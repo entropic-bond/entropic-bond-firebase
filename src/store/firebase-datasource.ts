@@ -19,7 +19,7 @@ export class FirebaseDatasource extends DataSource {
 		return new Promise<DocumentObject>( async resolve => {
 			try {
 				const docSnap = await getDoc( doc( db, collectionName, id ) )
-				resolve( docSnap.data() )
+				resolve( docSnap.data() as DocumentObject )
 			} 
 			catch( error ) {
 				console.log( error )
@@ -105,7 +105,7 @@ export class FirebaseDatasource extends DataSource {
 			const doc = await getDocs( query )
 			this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
 
-			resolve( doc.docs.map( doc => doc.data() ) ) 
+			resolve( doc.docs.map( doc => doc.data() as DocumentObject ) ) 
 		})
 	}
 
