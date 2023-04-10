@@ -39,13 +39,14 @@ export class FirebaseHelper {
 		storagePort: 9199,
 		authPort: 9099,
 		functionsPort: 5001,
-		emulate: true
+		emulate: false
 	}
 
 	static useEmulator( emulatorConfig?: Partial<EmulatorConfig> ) {
 
 		this._emulatorConfig = {
 			...FirebaseHelper.defaultEmulatorConfig,
+			emulate: true,
 			...emulatorConfig
 		}
 	}
