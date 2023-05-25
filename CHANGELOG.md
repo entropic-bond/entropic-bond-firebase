@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.1...v1.8.2) (2023-04-10)
+
+
+### Bug Fixes
+
+* auth is always emulating ([4371135](https://github.com/entropic-bond/entropic-bond-firebase/commit/43711359df8e916727cf6491743f20ea7fc6bb40))
+
 ## [1.8.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.0...v1.8.1) (2023-04-09)
 
 
