@@ -101,6 +101,26 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
+	resendEmailVerification( email: string, verificationLink: string ): Promise<void> {
+		return new Promise<void>( async ( resolve, reject ) => {
+			try {
+				const user = FirebaseHelper.instance.auth().currentUser
+				if ( !user ) throw new Error( `There is no logged in user` )
+
+				await sendEmailVerification( user, {
+					url: verificationLink
+				})
+				resolve()
+			}
+			catch( error ) {
+				reject({
+					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode,
+					message: verificationLink
+				})
+			}
+		})
+	}
+
 	onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ) {
 		FirebaseHelper.instance.auth().onAuthStateChanged( async credentials =>{
 			onChange( credentials? await this.toUserCredentials( credentials ) : undefined )
