@@ -101,7 +101,7 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
-	resendEmailVerification( email: string, verificationLink: string ): Promise<void> {
+	resendVerificationEmail( email: string, verificationLink: string ): Promise<void> {
 		return new Promise<void>( async ( resolve, reject ) => {
 			try {
 				const user = FirebaseHelper.instance.auth().currentUser
