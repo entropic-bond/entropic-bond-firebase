@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.2...v1.9.0) (2023-05-25)
+
+
+### Features
+
+* implement resendVerificationLink ([c32538d](https://github.com/entropic-bond/entropic-bond-firebase/commit/c32538d65ec09a027bb9694d17440d4d9e83419a))
+
 ## [1.8.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.1...v1.8.2) (2023-04-10)
 
 
