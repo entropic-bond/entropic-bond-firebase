@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.9.0...v1.9.1) (2023-05-25)
+
+
+### Bug Fixes
+
+* typo ([7df4f93](https://github.com/entropic-bond/entropic-bond-firebase/commit/7df4f93e7abb1f9aff6e6026c3635ca8dcde66b9))
+
 # [1.9.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.8.2...v1.9.0) (2023-05-25)
 
 
