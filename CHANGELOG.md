@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.9.1...v1.9.2) (2023-05-28)
+
+
+### Bug Fixes
+
+* add password to resendVerificationEmail ([5d837b7](https://github.com/entropic-bond/entropic-bond-firebase/commit/5d837b7cd4ac05e73d0e0b4fef511267553dc628))
+
 ## [1.9.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.9.0...v1.9.1) (2023-05-25)
 
 
