@@ -101,11 +101,18 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
-	resendVerificationEmail( email: string, verificationLink: string ): Promise<void> {
+	resendVerificationEmail( email: string, password: string, verificationLink: string ): Promise<void> {
 		return new Promise<void>( async ( resolve, reject ) => {
 			try {
+				await signInWithEmailAndPassword( FirebaseHelper.instance.auth(), email, password )
 				const user = FirebaseHelper.instance.auth().currentUser
-				if ( !user ) throw new Error( `There is no logged in user` )
+				if ( !user ) { 
+					reject({
+						code: 'userNotFound',
+						message: `There is no logged in user`
+					})
+					return
+				}
 
 				await sendEmailVerification( user, {
 					url: verificationLink
