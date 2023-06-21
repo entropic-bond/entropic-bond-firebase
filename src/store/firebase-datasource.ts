@@ -1,6 +1,14 @@
-import { collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, orderBy, Query, query, QueryConstraint, QueryDocumentSnapshot, startAfter, where, writeBatch } from 'firebase/firestore'
+import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, or, orderBy, Query, query, QueryCompositeFilterConstraint, QueryConstraint, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, writeBatch } from 'firebase/firestore'
 import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
+
+type FirestoreConstraint = QueryConstraint | QueryCompositeFilterConstraint
+
+interface ConstraintsContainer {
+	andConstraints: QueryFieldFilterConstraint[]
+	orConstraints: QueryFieldFilterConstraint[]
+	nonFilterConstraints: QueryNonFilterConstraint[]
+}
 
 export class FirebaseDatasource extends DataSource {
 	constructor( emulator?: EmulatorConfig ) {
@@ -66,7 +74,7 @@ export class FirebaseDatasource extends DataSource {
 		const db = FirebaseHelper.instance.firestore()
 		this._lastLimit = maxDocs || this._lastLimit
 
-		const constraints = this._lastConstraints.concat(
+		const constraints = this._lastConstraints.nonFilterConstraints.concat(
 			limit( this._lastLimit ),
 			startAfter( this._lastDocRetrieved )
 		)
@@ -80,24 +88,33 @@ export class FirebaseDatasource extends DataSource {
 
 	private queryObjectToQueryConstraints( queryObject: QueryObject<DocumentObject>, collectionName: string ): Query {
 		const db = FirebaseHelper.instance.firestore()
+		const andConstraints: QueryFieldFilterConstraint[] = []
+		const orConstraints: QueryFieldFilterConstraint[] = []
+		const nonFilterConstraints: QueryNonFilterConstraint[] = []
 
-		const constraints: QueryConstraint[] = DataSource.toPropertyPathOperations( 
-			queryObject.operations as any 
-		).map( operation =>	where( operation.property, operation.operator, operation.value ) )
+		DataSource.toPropertyPathOperations( queryObject.operations as any ).forEach( operation =>	{
+			if ( operation.aggregate) orConstraints.push( where( operation.property, operation.operator, operation.value ) )
+			else andConstraints.push( where( operation.property, operation.operator, operation.value ) )
+		})
 
 		if ( queryObject.sort?.propertyName ) {
-			constraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
+			nonFilterConstraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
 		}
 		
-		this._lastConstraints = constraints
+		this._lastConstraints = {
+			orConstraints,
+			andConstraints,
+			nonFilterConstraints
+		}
+
 		this._lastCollectionName = collectionName
 
 		if( queryObject.limit ) {
 			this._lastLimit = queryObject.limit
-			constraints.push( limit( queryObject.limit ) )
+			nonFilterConstraints.push( limit( queryObject.limit ) )
 		}
 
-		return query( collection( db, collectionName ), ...constraints )
+		return query( collection( db, collectionName ), or( ...orConstraints, and( ...andConstraints ) ), ...nonFilterConstraints )
 	}
 
 	private getFromQuery( query: FirebaseQuery ) {
@@ -110,7 +127,7 @@ export class FirebaseDatasource extends DataSource {
 	}
 
 	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData> | undefined
-	private _lastConstraints: QueryConstraint[] | undefined
+	private _lastConstraints: ConstraintsContainer | undefined
 	private _lastLimit: number = 0
 	private _lastCollectionName: string | undefined
 }
