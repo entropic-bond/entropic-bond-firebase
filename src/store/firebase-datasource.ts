@@ -1,8 +1,6 @@
-import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, or, orderBy, Query, query, QueryCompositeFilterConstraint, QueryConstraint, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, writeBatch } from 'firebase/firestore'
-import { Collections, DataSource, DocumentObject, QueryObject } from 'entropic-bond'
+import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
+import { Collections, DataSource, DocumentObject, QueryObject, QueryOperator } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
-
-type FirestoreConstraint = QueryConstraint | QueryCompositeFilterConstraint
 
 interface ConstraintsContainer {
 	andConstraints: QueryFieldFilterConstraint[]
@@ -93,8 +91,9 @@ export class FirebaseDatasource extends DataSource {
 		const nonFilterConstraints: QueryNonFilterConstraint[] = []
 
 		DataSource.toPropertyPathOperations( queryObject.operations as any ).forEach( operation =>	{
-			if ( operation.aggregate) orConstraints.push( where( operation.property, operation.operator, operation.value ) )
-			else andConstraints.push( where( operation.property, operation.operator, operation.value ) )
+			const operator = this.toFirebaseOperator( operation.operator )
+			if ( operation.aggregate ) orConstraints.push( where( operation.property, operator, operation.value ) )
+			else andConstraints.push( where( operation.property, operator, operation.value ) )
 		})
 
 		if ( queryObject.sort?.propertyName ) {
@@ -115,6 +114,22 @@ export class FirebaseDatasource extends DataSource {
 		}
 
 		return query( collection( db, collectionName ), or( ...orConstraints, and( ...andConstraints ) ), ...nonFilterConstraints )
+	}
+
+	toFirebaseOperator( operator: QueryOperator ): WhereFilterOp {
+		switch( operator ) {
+			case '==': 
+			case '!=':
+			case '<':
+			case '<=':
+			case '>':
+			case '>=': return operator
+			case 'contains': return 'array-contains'
+			case 'containsAny': return 'array-contains-any'
+			case 'in': return 'in'
+			case '!in': return 'not-in'
+			default: return operator
+		}
 	}
 
 	private getFromQuery( query: FirebaseQuery ) {
