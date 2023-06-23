@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.10.0...v1.11.0) (2023-06-23)
+
+
+### Features
+
+* containsAny ([56afd92](https://github.com/entropic-bond/entropic-bond-firebase/commit/56afd92d984341a7e4fee0eca02c5c9a1c6df02e))
+
 # [1.10.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.9.2...v1.10.0) (2023-06-21)
 
 
