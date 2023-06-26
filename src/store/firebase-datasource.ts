@@ -126,8 +126,6 @@ export class FirebaseDatasource extends DataSource {
 			case '>=': return operator
 			case 'contains': return 'array-contains'
 			case 'containsAny': return 'array-contains-any'
-			case 'in': return 'in'
-			case '!in': return 'not-in'
 			default: return operator
 		}
 	}
