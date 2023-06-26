@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.11.0...v1.11.1) (2023-06-26)
+
+
+### Bug Fixes
+
+* contains operator ([8dd3e4b](https://github.com/entropic-bond/entropic-bond-firebase/commit/8dd3e4b38542e6767bd41bc7ca543e5cf94f1b72))
+
 # [1.11.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.10.0...v1.11.0) (2023-06-23)
 
 
