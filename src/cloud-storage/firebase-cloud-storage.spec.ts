@@ -1,7 +1,4 @@
-/**
- * @jest-environment node
- */
- (global as any).XMLHttpRequest = require('xhr2')
+(global as any).XMLHttpRequest = require('xhr2')
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
@@ -86,15 +83,14 @@ describe( 'Firebase Cloud Storage', ()=>{
 		expect( await resp.text() ).toEqual( 'llo,He world!')
 	})
 
-	it( 'should trigger events', done=>{
-		const cb = jest.fn()
+	it( 'should trigger events', async () => {
+		const cb = vi.fn()
 
-		file.save({ data:blobData1 }).then( ()=>{
-			expect( cb ).toHaveBeenCalledTimes( 2 )
-			done()
-		})
-		
+		const savePromise = file.save({ data:blobData1 })
 		file.uploadControl().onProgress( cb )
+		await savePromise
+
+		expect( cb ).toHaveBeenCalledTimes( 2 )
 	})
 
 	describe( 'Streaming', ()=>{
@@ -117,7 +113,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 		})
 
 		it( 'should replace file on save after load', async ()=>{
-			const deleteSpy = jest.spyOn( testObj.file, 'delete' )
+			const deleteSpy = vi.spyOn( testObj.file, 'delete' )
 
 			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )

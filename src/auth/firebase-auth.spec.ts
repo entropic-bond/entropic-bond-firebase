@@ -10,7 +10,7 @@ describe( 'Firebase Auth', ()=>{
 		expect( true ).toBe( true )
 	})
 	
-// 	let authChangeSpy = jest.fn()
+// 	let authChangeSpy = vi.fn()
 // 	FirebaseHelper.setFirebaseConfig({
 // 		projectId: "demo-test",
 // 	})

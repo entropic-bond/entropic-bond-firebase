@@ -1,13 +1,9 @@
-/**
- * @jest-environment node
- */
 import dns from 'node:dns'
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
-import { exit } from 'node:process'
 
 dns.setDefaultResultOrder('ipv4first')
 
@@ -88,11 +84,9 @@ describe( 'Firestore Model', ()=>{
 		expect( deletedUser ).toBeUndefined()
 	})
 
-	it( 'should not throw if a document id doesn\'t exists', ( done )=>{
-		expect( ()=>{
-			model.findById( 'nonExistingId' )
-				.then( done )
-				.catch( done )
+	it( 'should not throw if a document id doesn\'t exists', ()=>{
+		expect( async ()=>{
+			await model.findById( 'nonExistingId' )
 		}).not.toThrow()
 	})
 
