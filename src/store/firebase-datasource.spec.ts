@@ -7,6 +7,7 @@ import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
+import { exit } from 'node:process'
 
 dns.setDefaultResultOrder('ipv4first')
 
@@ -242,11 +243,51 @@ describe( 'Firestore Model', ()=>{
 			]))
 		})
 
+		it( 'should find combining `OR` query and `where` query on different fields', async ()=>{
+			const docs = await model.find().where( 'age', '==', 23 ).or( 'admin', '!=', true ).get()
+
+			expect( docs ).toHaveLength( 3 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', admin: true, age: 23 }),
+				expect.objectContaining({ id: 'user2', admin: false, age: 21 }),
+				expect.objectContaining({ id: 'user4', admin: false, age: 35 }),
+			]))
+		})
+
 		it( 'should throw if a `where` query is used after an `or` query', ()=>{
 			expect( 
 				()=> model.find().or( 'age', '==', 23 ).where( 'age', '>', 50 )
 			).toThrow( Model.error.invalidQueryOrder )
 		})
+
+		it( 'should evaluate mixing operands', async ()=>{
+			const docs = await model.find().where( 'age', '>', 39 ).and( 'age', '<', 57 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs ).toHaveLength( 5 )
+			expect( docs ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
+				expect.objectContaining({ id: 'user5', age: 41 }),
+				expect.objectContaining({ id: 'user6', age: 40 })
+			]))
+
+			const docs1 = await model.find().where( 'age', '==', 41 ).and( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs1 ).toHaveLength( 2 )
+			expect( docs1 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 })
+			]))
+
+			const docs2 = await model.find().where( 'age', '==', 41 ).or( 'age', '==', 56 ).or( 'age', '==', 23 ).or( 'age', '==', 21 ).get()
+			expect( docs2 ).toHaveLength( 4 )
+			expect( docs2 ).toEqual( expect.arrayContaining([
+				expect.objectContaining({ id: 'user1', age: 23 }),
+				expect.objectContaining({ id: 'user2', age: 21 }),
+				expect.objectContaining({ id: 'user3', age: 56 }),
+				expect.objectContaining({ id: 'user5', age: 41 })
+			]))
+		})
+
 	})
 
 	describe( 'Searchable array property', ()=>{
