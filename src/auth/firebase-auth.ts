@@ -128,6 +128,10 @@ export class FirebaseAuth extends AuthService {
 		})
 	}
 
+	override refreshToken(): Promise<void> {
+		return FirebaseHelper.instance.auth().currentUser?.getIdToken( true ) as unknown as Promise<void>
+	}
+
 	onAuthStateChange<T extends {}>( onChange: (userCredentials: UserCredentials<T> | undefined) => void ) {
 		FirebaseHelper.instance.auth().onAuthStateChanged( async credentials =>{
 			onChange( credentials? await this.toUserCredentials( credentials ) : undefined )
