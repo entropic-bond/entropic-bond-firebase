@@ -48,7 +48,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^20.8.9",
+    "@types/node": "^20.11.14",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
     "semantic-release": "^22.0.5",
