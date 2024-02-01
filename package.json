@@ -48,7 +48,7 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^20.8.9",
+    "@types/node": "^20.11.14",
     "git-branch-is": "^4.0.0",
     "husky": "^8.0.3",
     "semantic-release": "^22.0.5",
@@ -56,8 +56,8 @@
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.47.0",
-    "firebase": "^10.5.2",
+    "entropic-bond": "^1.49.0",
+    "firebase": "^10.7.2",
     "vitest": "^0.34.6"
   }
 }
