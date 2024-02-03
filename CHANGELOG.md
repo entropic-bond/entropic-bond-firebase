@@ -1,3 +1,11 @@
+# [1.12.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.11.1...v1.12.0) (2024-02-03)
+
+
+### Features
+
+* refresh token ([317cd2c](https://github.com/entropic-bond/entropic-bond-firebase/commit/317cd2cc27aeb5dda3232c5571cd53586922420a))
+* refresh token _ ([5f9f463](https://github.com/entropic-bond/entropic-bond-firebase/commit/5f9f463286e7988b0f6ead2baf04c219e1afad02))
+
 ## [1.11.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.11.0...v1.11.1) (2023-06-26)
 
 
