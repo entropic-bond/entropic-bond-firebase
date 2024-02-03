@@ -20,7 +20,7 @@
     "firebase-functions": "^4.6.0"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "private": true
 }

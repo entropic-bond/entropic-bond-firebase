@@ -1,6 +1,7 @@
 {
   "name": "@entropic-bond/firebase",
   "version": "1.11.1",
+  "type": "module",
   "publishConfig": {
     "access": "public",
     "branches": [
@@ -48,16 +49,16 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^20.11.14",
+    "@types/node": "^20.11.16",
     "git-branch-is": "^4.0.0",
-    "husky": "^8.0.3",
-    "semantic-release": "^22.0.5",
-    "typescript": "^5.2.2",
+    "husky": "^9.0.10",
+    "semantic-release": "^23.0.0",
+    "typescript": "^5.3.3",
     "xhr2": "^0.2.1"
   },
   "dependencies": {
     "entropic-bond": "^1.49.0",
-    "firebase": "^10.7.2",
-    "vitest": "^0.34.6"
+    "firebase": "^10.8.0",
+    "vitest": "^1.2.2"
   }
 }
