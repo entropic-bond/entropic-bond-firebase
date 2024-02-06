@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.12.0...v1.12.1) (2024-02-06)
+
+
+### Bug Fixes
+
+* esm ([588b99f](https://github.com/entropic-bond/entropic-bond-firebase/commit/588b99f5e7bc7c00715d377dc0e187af5321f61f))
+
 # [1.12.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.11.1...v1.12.0) (2024-02-03)
 
 
