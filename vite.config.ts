@@ -11,8 +11,8 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: resolve( __dirname, 'src/index.ts' ),
-			name: 'entropic-bond',
-			fileName: 'entropic-bond'
+			name: 'entropic-bond-firebase',
+			fileName: 'entropic-bond-firebase'
 			
 		},
 		"outDir": "lib",
