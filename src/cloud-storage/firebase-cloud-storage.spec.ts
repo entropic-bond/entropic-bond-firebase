@@ -129,7 +129,5 @@ describe( 'Firebase Cloud Storage', ()=>{
 
 			expect( deleteSpy ).toHaveBeenCalled()
 		})		
-
 	})
-
 })
