@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.2...v1.13.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* force update semantic release version ([ca8802c](https://github.com/entropic-bond/entropic-bond-firebase/commit/ca8802c3b18da22cf7089d675f2c1522a697ab7b))
+
 ## [1.13.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.1...v1.13.2) (2024-02-08)
 
 
