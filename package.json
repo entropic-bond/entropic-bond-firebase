@@ -1,7 +1,7 @@
 {
   "name": "@entropic-bond/firebase",
   "type": "module",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "Firebase plugins for Entropic Bond",
   "main": "./lib/entropic-bond-firebase.umd.cjs",
   "module": "./lib/entropic-bond-firebase.js",
@@ -12,6 +12,9 @@
       "types": "./lib/index.d.ts"
     }
   },
+  "files": [
+    "lib"
+  ],
   "publishConfig": {
     "access": "public",
     "branches": [
