@@ -1,3 +1,15 @@
+# [1.13.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.12.1...v1.13.0) (2024-02-08)
+
+
+### Bug Fixes
+
+* types entry ([598e2a3](https://github.com/entropic-bond/entropic-bond-firebase/commit/598e2a311aff85caa679523a3b76036b460de48e))
+
+
+### Features
+
+* esm and cjs ([d8d6647](https://github.com/entropic-bond/entropic-bond-firebase/commit/d8d66478dbfcd9e2d15e9def2e6265b5b5249e8e))
+
 ## [1.12.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.12.0...v1.12.1) (2024-02-06)
 
 
