@@ -12,6 +12,7 @@
       "types": "./lib/index.d.ts"
     }
   },
+  "types": "./lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -64,7 +65,7 @@
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.50.2",
+    "entropic-bond": "^1.50.3",
     "firebase": "^10.8.0"
   }
 }
