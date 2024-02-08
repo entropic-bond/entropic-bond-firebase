@@ -13,7 +13,6 @@ export default defineConfig({
 			entry: resolve( __dirname, 'src/index.ts' ),
 			name: 'entropic-bond-firebase',
 			fileName: 'entropic-bond-firebase'
-			
 		},
 		"outDir": "lib",
 	},
