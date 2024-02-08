@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.0...v1.13.1) (2024-02-08)
+
+
+### Bug Fixes
+
+* import filename ([5aa22ce](https://github.com/entropic-bond/entropic-bond-firebase/commit/5aa22ce991c4645569468fc57e1b07af1000c04e))
+
 # [1.13.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.12.1...v1.13.0) (2024-02-08)
 
 
