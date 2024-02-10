@@ -14,7 +14,8 @@ export default defineConfig({
 			name: 'entropic-bond-firebase',
 			fileName: 'entropic-bond-firebase'
 		},
-		"outDir": "lib",
+		sourcemap: true,
+		outDir: 'lib',
 	},
 	plugins: [
 		dts()
