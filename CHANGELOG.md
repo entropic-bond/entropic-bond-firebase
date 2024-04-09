@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.3...v1.13.4) (2024-02-10)
+
+
+### Bug Fixes
+
+* sourcemap ([0d20f0e](https://github.com/entropic-bond/entropic-bond-firebase/commit/0d20f0eee5ed5d800691d94291259b3e9705fb9b))
+
 ## [1.13.3](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.2...v1.13.3) (2024-02-08)
 
 
