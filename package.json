@@ -57,15 +57,15 @@
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^20.11.17",
     "git-branch-is": "^4.0.0",
-    "husky": "^9.0.10",
-    "semantic-release": "^23.0.2",
+    "husky": "^9.0.11",
+    "semantic-release": "^23.0.7",
     "typescript": "^5.3.3",
     "vite-plugin-dts": "^3.7.2",
     "vitest": "^1.2.2",
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.50.4",
-    "firebase": "^10.8.0"
+    "entropic-bond": "^1.50.5",
+    "firebase": "^10.6.0"
   }
 }
