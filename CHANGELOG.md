@@ -1,3 +1,10 @@
+## [1.13.5](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.4...v1.13.5) (2024-04-09)
+
+
+### Bug Fixes
+
+* downgrade firebase because vulnerability ([01d267c](https://github.com/entropic-bond/entropic-bond-firebase/commit/01d267cfe5fd3ee72410d901675d0ecd693be4df))
+
 ## [1.13.4](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.3...v1.13.4) (2024-02-10)
 
 
