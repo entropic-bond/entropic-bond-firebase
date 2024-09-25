@@ -1,6 +1,8 @@
-import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { Collections, DataSource, DocumentObject, QueryObject, QueryOperator } from 'entropic-bond'
+import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
+import { Collections, DataSource, DocumentChangeListerner, DocumentObject, Persistent, PersistentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
+import { D } from 'vitest/dist/chunks/reporters.WnPwkmgA.js'
+import { snapshot } from 'node:test'
 
 interface ConstraintsContainer {
 	andConstraints: QueryFieldFilterConstraint[]
@@ -84,6 +86,34 @@ export class FirebaseDatasource extends DataSource {
 	// prev( limit?: number ): Promise< DocumentObject[] > {
 	// }
 
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+		const queryConstraints = this.queryObjectToQueryConstraints( query as unknown as QueryObject<DocumentObject>, collectionName )
+		return onSnapshot( queryConstraints, snapshot => {
+			snapshot.docChanges().forEach( change => {
+				listener({
+					type: change.type === 'added'? 'create' : change.type === 'modified'? 'update' : 'delete',
+					after: change.doc.data() as DocumentObject,
+					before: undefined,
+					params: {}
+				})
+			})
+		})
+	}
+
+	override onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+		const db = FirebaseHelper.instance.firestore()
+
+		return onSnapshot( doc( db, documentPath, documentId ), snapshot => {
+			listener({
+				type: 'update',
+				before: undefined,
+				after: snapshot.data() as DocumentObject,
+				params: {}
+			})
+
+		})
+	}
+	
 	private queryObjectToQueryConstraints( queryObject: QueryObject<DocumentObject>, collectionName: string ): Query {
 		const db = FirebaseHelper.instance.firestore()
 		const andConstraints: QueryFieldFilterConstraint[] = []
