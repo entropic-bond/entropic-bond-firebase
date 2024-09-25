@@ -552,4 +552,16 @@ describe( 'Firestore Model', ()=>{
 		})
 	})
 
+	describe( 'Data listeners', ()=>{
+		it( 'should listen for changes in document', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			model.onDocumentChange( 'user6', listener )
+			await model.save( loadedUser! )
+
+			expect( listener ).toHaveBeenCalled()
+		})
+	})
+
 })

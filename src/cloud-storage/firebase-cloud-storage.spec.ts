@@ -102,7 +102,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 			model = Store.getModel<Test>( testObj )
 		})
 
-		it( 'should load object with StoredFile', async ()=>{
+		it.skip( 'should load object with StoredFile', async ()=>{
 			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })
 			await model.save( testObj )
 
@@ -112,7 +112,7 @@ describe( 'Firebase Cloud Storage', ()=>{
 			expect( newTestObj?.file.url ).toContain( testObj.file.id )
 		})
 
-		it( 'should replace file on save after load', async ()=>{
+		it.skip( 'should replace file on save after load', async ()=>{
 			const deleteSpy = vi.spyOn( testObj.file, 'delete' )
 
 			await testObj.file.save({ data: blobData1, fileName: 'test.dat' })

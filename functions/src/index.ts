@@ -1,4 +1,5 @@
-import * as _functions from 'firebase-functions'
+import * as functions from 'firebase-functions/v2'
+
 import admin from 'firebase-admin'
 import { persistent, Persistent, PersistentObject, registerPersistentClass } from 'entropic-bond'
 
@@ -15,19 +16,22 @@ export class ParamWrapper extends Persistent {
 
 
 admin.initializeApp()
-const functions = _functions.region('europe-west1')
+functions.setGlobalOptions({
+	region: 'europe-west1',
+	maxInstances: 10
+})
 
 export const test = functions.https.onRequest((_req, res) => {
   res.send('Hello from Firebase!')
 })
 
 export const testCallablePersistent = functions.https.onCall( 
-	( param: PersistentObject<ParamWrapper> ) => {
+	param => {
 		Persistent.registerFactory( 'ParamWrapper', ParamWrapper )
 		return param
 	}
 )
 
 export const testCallablePlain = functions.https.onCall( 
-	( param: string ) => param.length
+	request => request.data().length
 )

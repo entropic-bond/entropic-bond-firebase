@@ -1,8 +1,6 @@
 import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { Collections, DataSource, DocumentChangeListerner, DocumentObject, Persistent, PersistentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
+import { Collections, DataSource, DocumentChangeListerner, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
-import { D } from 'vitest/dist/chunks/reporters.WnPwkmgA.js'
-import { snapshot } from 'node:test'
 
 interface ConstraintsContainer {
 	andConstraints: QueryFieldFilterConstraint[]
