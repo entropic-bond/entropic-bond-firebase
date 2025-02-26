@@ -1,3 +1,11 @@
+## [1.13.7](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.6...v1.13.7) (2024-09-25)
+
+
+### Bug Fixes
+
+* data listerners ([70e5d81](https://github.com/entropic-bond/entropic-bond-firebase/commit/70e5d81a98f7854b6822b7479bda79b9def116b9))
+* tests ([112ce66](https://github.com/entropic-bond/entropic-bond-firebase/commit/112ce66654cb5a5d5c2a8650393388d9c56ba560))
+
 ## [1.13.6](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.5...v1.13.6) (2024-04-16)
 
 
