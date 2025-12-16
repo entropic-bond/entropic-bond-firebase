@@ -1,3 +1,10 @@
+## [1.13.11](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.10...v1.13.11) (2025-12-16)
+
+
+### Bug Fixes
+
+* CollectionChangeListener ([ef1c544](https://github.com/entropic-bond/entropic-bond-firebase/commit/ef1c544c2870d19c5eb698fc7975a4d322a22034))
+
 ## [1.13.10](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.9...v1.13.10) (2025-12-10)
 
 
