@@ -1,5 +1,5 @@
 import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { Collections, DataSource, DocumentChangeListerner, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
+import { CollectionChangeListener, Collections, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 interface ConstraintsContainer {
@@ -84,21 +84,15 @@ export class FirebaseDatasource extends DataSource {
 	// prev( limit?: number ): Promise< DocumentObject[] > {
 	// }
 
-	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
 		const queryConstraints = this.queryObjectToQueryConstraints( query as unknown as QueryObject<DocumentObject>, collectionName )
 		return onSnapshot( queryConstraints, snapshot => {
-			snapshot.docChanges().forEach( change => {
-				listener({
-					type: change.type === 'added'? 'create' : change.type === 'modified'? 'update' : 'delete',
-					after: change.doc.data() as DocumentObject,
-					before: undefined,
-					params: {}
-				})
-			})
+			const changes = snapshot.docChanges().map( change => change.doc.data() as DocumentObject )
+			listener( changes )
 		})
 	}
 
-	override onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListerner<DocumentObject> ): Unsubscriber {
+	override onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
 		const db = FirebaseHelper.instance.firestore()
 
 		return onSnapshot( doc( db, documentPath, documentId ), snapshot => {

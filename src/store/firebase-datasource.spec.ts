@@ -1,11 +1,12 @@
-import dns from 'node:dns'
+// import dns from 'node:dns'
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
+import { Unsubscribe } from 'firebase/auth'
 
-dns.setDefaultResultOrder('ipv4first')
+// dns.setDefaultResultOrder('ipv4first')
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = Object.values( mockData.TestUser )
@@ -553,15 +554,78 @@ describe( 'Firestore Model', ()=>{
 	})
 
 	describe( 'Data listeners', ()=>{
-		it( 'should listen for changes in document', async ()=>{
+		let unsubscribe: Unsubscribe
+
+		it( 'should listen for update changes in document', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			const listener = vi.fn()
 
-			model.onDocumentChange( 'user6', listener )
+			unsubscribe = model.onDocumentChange( 'user6', listener )
 			await model.save( loadedUser! )
+			unsubscribe()
 
-			expect( listener ).toHaveBeenCalled()
+			expect( listener ).toHaveBeenCalledWith({
+				after: expect.objectContaining({ id: 'user6' }),
+				before: undefined,
+				params: {},
+				type: 'update'
+			})
 		})
+
+		it( 'should listen for delete changes in document', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onDocumentChange( 'user6', listener )
+			await model.delete( loadedUser!.id )
+			unsubscribe()
+
+			expect( listener ).toHaveBeenCalledWith({
+				after: undefined,
+				before: undefined,
+				params: {},
+				type: 'update'
+			})
+		})
+
+		it( 'should listen for update changes in collection', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user6' ), listener )
+			await model.save( loadedUser! )
+			unsubscribe()
+
+			expect( listener ).toHaveBeenCalledWith([
+				expect.objectContaining({ id: 'user6' }),
+			])
+		})
+
+		it.skip( 'should listen for deletions in collection', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user6' ), listener )
+			await model.delete( loadedUser!.id )
+			unsubscribe()
+
+			expect( listener ).toHaveBeenCalledWith([
+				expect.objectContaining({ id: 'user6' }),
+			])
+		})
+
+		it.skip( 'should not listen for unrelated changes in collection', async ()=>{
+			//Firebase emulator seems to trigger the listener even for unrelated changes see issue https://github.com/firebase/firebase-tools/issues/3867
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user1' ), listener )
+			await model.save( loadedUser! )
+			unsubscribe()
+
+			expect( listener ).not.toHaveBeenCalled()
+		})
+
 	})
 
 })
