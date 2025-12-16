@@ -25,7 +25,6 @@ jobs:
         with:
           java-version: '25'
           distribution: 'temurin' # Recommended distribution as it is cached on runners
-          cache: 'npm' # Or 'maven'/'gradle' depending on your project's package manager
 
       - uses: actions/setup-node@v4
         with:
