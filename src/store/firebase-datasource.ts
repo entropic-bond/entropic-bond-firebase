@@ -1,5 +1,5 @@
 import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { CollectionChangeListener, Collections, DataSource, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
+import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 interface ConstraintsContainer {
@@ -87,7 +87,12 @@ export class FirebaseDatasource extends DataSource {
 	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
 		const queryConstraints = this.queryObjectToQueryConstraints( query as unknown as QueryObject<DocumentObject>, collectionName )
 		return onSnapshot( queryConstraints, snapshot => {
-			const changes = snapshot.docChanges().map( change => change.doc.data() as DocumentObject )
+			const changes = snapshot.docChanges().map( change => ({
+				after: change.doc.data() as DocumentObject,
+				type: change.type === 'added' ? 'create' : change.type === 'removed' ? 'delete' : 'update',
+				before: undefined,
+				params: {}
+			} as DocumentChange<DocumentObject> ))
 			listener( changes )
 		})
 	}
