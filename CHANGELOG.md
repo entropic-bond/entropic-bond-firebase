@@ -1,3 +1,10 @@
+## [1.13.13](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.12...v1.13.13) (2025-12-17)
+
+
+### Bug Fixes
+
+* Change to include change type ([10d3d96](https://github.com/entropic-bond/entropic-bond-firebase/commit/10d3d968306d58d6cb005ca6525a9c3966bd4406))
+
 ## [1.13.12](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.11...v1.13.12) (2025-12-17)
 
 
