@@ -1,5 +1,5 @@
 import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
+import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentChangeListenerHandler, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 interface ConstraintsContainer {
@@ -164,6 +164,14 @@ export class FirebaseDatasource extends DataSource {
 
 			resolve( doc.docs.map( doc => doc.data() as DocumentObject ) ) 
 		})
+	}
+
+	protected override subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): Promise<DocumentChangeListenerHandler | undefined> {
+		throw new Error('Method not implemented.')
+	}
+
+	protected override collectionsMatchingTemplate( template: string ): Promise<string[]> {
+		throw new Error('Method not implemented.')
 	}
 
 	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData> | undefined
