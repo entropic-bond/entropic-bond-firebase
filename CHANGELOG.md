@@ -1,3 +1,10 @@
+## [1.13.19](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.18...v1.13.19) (2026-01-25)
+
+
+### Bug Fixes
+
+* make module ([702ce1f](https://github.com/entropic-bond/entropic-bond-firebase/commit/702ce1f6216fc94ee60c786a0778c56337eadcec))
+
 ## [1.13.18](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.17...v1.13.18) (2026-01-24)
 
 
