@@ -1,3 +1,10 @@
+## [1.13.20](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.19...v1.13.20) (2026-01-25)
+
+
+### Bug Fixes
+
+* build with vite ([d1e15ff](https://github.com/entropic-bond/entropic-bond-firebase/commit/d1e15ff1c1624a5977615b6f72b28790621cdd43))
+
 ## [1.13.19](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.18...v1.13.19) (2026-01-25)
 
 
