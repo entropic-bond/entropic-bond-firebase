@@ -34,7 +34,7 @@
   "scripts": {
     "test-vi": "vitest",
     "test": "npm run install-functions-dependencies && firebase emulators:exec --project demo-test vitest",
-    "build": "tsc -p tsconfig-build.json && vite build",
+    "build": "vite build",
     "prepare": "npm run build",
     "emulators": "firebase emulators:start --project demo-test",
     "install-functions-dependencies": "cd functions && npm ci"

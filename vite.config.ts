@@ -18,6 +18,6 @@ export default defineConfig({
 		outDir: 'lib',
 	},
 	plugins: [
-		dts()
+		dts({ tsconfigPath: './tsconfig-build.json' })
 	]
 })
