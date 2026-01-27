@@ -166,11 +166,11 @@ export class FirebaseDatasource extends DataSource {
 		})
 	}
 
-	protected override subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): Promise<DocumentChangeListenerHandler | undefined> {
+	protected override subscribeToDocumentChangeListener( collectionPathToListen: string, listener: DocumentChangeListener<DocumentObject> ): DocumentChangeListenerHandler | undefined {
 		throw new Error('Method not implemented.')
 	}
 
-	protected override collectionsMatchingTemplate( template: string ): Promise<string[]> {
+	protected override resolveCollectionPaths( template: string ): Promise<string[]> {
 		throw new Error('Method not implemented.')
 	}
 
