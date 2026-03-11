@@ -1,3 +1,10 @@
+## [1.13.22](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.21...v1.13.22) (2026-01-27)
+
+
+### Bug Fixes
+
+* update dependencies and remove method promises in FirebaseDatasource ([b2c9a71](https://github.com/entropic-bond/entropic-bond-firebase/commit/b2c9a713fe9b551d2eebf5ea3bb9d5a4475d1add))
+
 ## [1.13.21](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.20...v1.13.21) (2026-01-25)
 
 
