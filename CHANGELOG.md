@@ -1,3 +1,10 @@
+## [1.13.23](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.22...v1.13.23) (2026-03-11)
+
+
+### Bug Fixes
+
+* update dependencies in package.json ([cc9459c](https://github.com/entropic-bond/entropic-bond-firebase/commit/cc9459c6d77e8874d846337d29bfad39499c744b))
+
 ## [1.13.22](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.21...v1.13.22) (2026-01-27)
 
 
