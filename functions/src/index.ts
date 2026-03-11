@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions/v2'
 
 import admin from 'firebase-admin'
-import { persistent, Persistent, PersistentObject, registerPersistentClass } from 'entropic-bond'
+import { persistent, Persistent, registerPersistentClass } from 'entropic-bond'
 
 @registerPersistentClass( 'ParamWrapper' )
 export class ParamWrapper extends Persistent {
