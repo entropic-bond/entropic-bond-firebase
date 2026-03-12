@@ -1,3 +1,12 @@
+## [1.13.26](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.25...v1.13.26) (2026-03-12)
+
+
+### Bug Fixes
+
+* enhance onDocumentChange to include metadata and collection path ([f6ae42b](https://github.com/entropic-bond/entropic-bond-firebase/commit/f6ae42b5b448ef3c0a2bb5522f329d535d32830c))
+* include collection path in update listener parameters for Firestore model tests ([c16b71b](https://github.com/entropic-bond/entropic-bond-firebase/commit/c16b71ba90ef7bd3b396b5dad7333430ef1e04a5))
+* update entropic-bond dependency to version 1.58.0 ([58cc22b](https://github.com/entropic-bond/entropic-bond-firebase/commit/58cc22bbc566139ce76b596c9810ac15ca76c4da))
+
 ## [1.13.25](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.24...v1.13.25) (2026-03-12)
 
 
