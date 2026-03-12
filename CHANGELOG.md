@@ -1,3 +1,10 @@
+## [1.13.25](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.24...v1.13.25) (2026-03-12)
+
+
+### Bug Fixes
+
+* update entropic-bond dependency to version 1.58.0 ([1a715c7](https://github.com/entropic-bond/entropic-bond-firebase/commit/1a715c7926203a85c1e7152114ba5e7c654d08bb))
+
 ## [1.13.24](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.23...v1.13.24) (2026-03-11)
 
 
