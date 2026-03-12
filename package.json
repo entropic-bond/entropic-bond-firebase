@@ -64,7 +64,7 @@
     "xhr2": "^0.2.1"
   },
   "dependencies": {
-    "entropic-bond": "^1.57.1",
+    "entropic-bond": "^1.58.0",
     "firebase": "^12.10.0"
   }
 }
