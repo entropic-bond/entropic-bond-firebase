@@ -567,8 +567,9 @@ describe( 'Firestore Model', ()=>{
 			expect( listener ).toHaveBeenCalledWith({
 				after: expect.objectContaining({ id: 'user6' }),
 				before: undefined,
-				params: {},
-				type: 'update'
+				params: expect.objectContaining({}),
+				type: 'update',
+				collectionPath: 'TestUser'
 			})
 		})
 
@@ -583,8 +584,9 @@ describe( 'Firestore Model', ()=>{
 			expect( listener ).toHaveBeenCalledWith({
 				after: undefined,
 				before: undefined,
-				params: {},
-				type: 'update'
+				params: expect.objectContaining({}),
+				type: 'update',
+				collectionPath: 'TestUser'
 			})
 		})
 
