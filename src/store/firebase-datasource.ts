@@ -105,10 +105,14 @@ export class FirebaseDatasource extends DataSource {
 				type: 'update',
 				before: undefined,
 				after: snapshot.data() as DocumentObject,
-				params: {}
+				params: snapshot.metadata,
+				collectionPath: documentPath
 			})
-
 		})
+	}
+
+	override onDocumentTemplateChange( collectionTemplate: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
+		throw new Error('Method not implemented.')
 	}
 	
 	private queryObjectToQueryConstraints( queryObject: QueryObject<DocumentObject>, collectionName: string ): Query {
