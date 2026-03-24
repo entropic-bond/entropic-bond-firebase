@@ -68,6 +68,7 @@ export class FirebaseDatasource extends DataSource {
 
 	next( maxDocs?: number ): Promise< DocumentObject[] > {
 		if( !this._lastConstraints || !this._lastCollectionName ) throw new Error('You should perform a query prior to using method next')
+		if ( !this._lastDocRetrieved ) return Promise.resolve([])
 
 		const db = FirebaseHelper.instance.firestore()
 		this._lastLimit = maxDocs || this._lastLimit
@@ -77,7 +78,7 @@ export class FirebaseDatasource extends DataSource {
 			startAfter( this._lastDocRetrieved )
 		)
 
-		return this.getFromQuery( query( collection( db, this._lastCollectionName ), ...constraints ) )
+		return this.getFromQuery( query( collection( db, this._lastCollectionName ), or( ...this._lastConstraints.orConstraints, and( ...this._lastConstraints.andConstraints ) ), ...constraints ) )
 	}
 
 	// prev should be used with next in reverse order
@@ -164,9 +165,15 @@ export class FirebaseDatasource extends DataSource {
 	private getFromQuery( query: FirebaseQuery ) {
 		return new Promise< DocumentObject[] >( async resolve => {
 			const doc = await getDocs( query )
-			this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
 
-			resolve( doc.docs.map( doc => doc.data() as DocumentObject ) ) 
+			if ( doc.empty ) {
+				this._lastDocRetrieved = undefined
+				resolve( [] )
+			}
+			else {
+				this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
+				resolve( doc.docs.map( doc => doc.data() as DocumentObject ) ) 
+			}
 		})
 	}
 
