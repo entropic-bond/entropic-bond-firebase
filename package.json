@@ -56,15 +56,16 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/node": "^25.4.0",
+    "@types/node": "^25.5.0",
     "semantic-release": "^25.0.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.2",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.0.18",
+    "vitest": "^4.1.1",
     "xhr2": "^0.2.1"
   },
   "dependencies": {
     "entropic-bond": "^1.58.0",
-    "firebase": "^12.10.0"
+    "firebase": "^12.11.0"
   }
 }
