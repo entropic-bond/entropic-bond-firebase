@@ -1,3 +1,10 @@
+## [1.13.27](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.26...v1.13.27) (2026-03-24)
+
+
+### Bug Fixes
+
+* next method ([12bc8a6](https://github.com/entropic-bond/entropic-bond-firebase/commit/12bc8a63cf67a84ec57d640bc309b66b54f3ae0a))
+
 ## [1.13.26](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.25...v1.13.26) (2026-03-12)
 
 
