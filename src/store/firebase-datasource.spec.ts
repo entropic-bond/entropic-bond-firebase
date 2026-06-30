@@ -1,4 +1,5 @@
-// import dns from 'node:dns'
+/// <reference types="node" />
+
 import { Model, Persistent, Store } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
@@ -6,7 +7,14 @@ import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
 import mockData from '../mocks/mock-data.json'
 import { Unsubscribe } from 'firebase/auth'
 
-// dns.setDefaultResultOrder('ipv4first')
+import { createRequire } from 'node:module'
+const _require = createRequire( import.meta.url )
+try {
+	const constants = _require( '@grpc/grpc-js/build/src/constants' )
+	constants.DEFAULT_MAX_RECEIVE_MESSAGE_LENGTH = -1
+} catch {
+	// gRPC not available
+}
 
 async function loadTestData( model: Model<TestUser> ) {
 	const users = Object.values( mockData.TestUser )

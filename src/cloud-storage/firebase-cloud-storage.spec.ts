@@ -1,24 +1,7 @@
-(global as any).XMLHttpRequest = require('xhr2')
 import { FirebaseCloudStorage } from './firebase-cloud-storage'
 import { FirebaseHelper } from '../firebase-helper'
 import { FirebaseDatasource } from '../store/firebase-datasource'
 import { CloudStorage, Model, Persistent, persistent, registerPersistentClass, Store, StoredFile } from 'entropic-bond'
-
-// Note about tests leaking. I've been checking and looks like firebase.storage 
-// methods are the responsible for the test leaking (as firebase v. 8.6.3).
-
-class File {	
-	data: Uint8Array | undefined
-	name: string | undefined
-	lastModified: any
-	size: number | undefined
-	type: any
-	arrayBuffer: any
-	slice: any
-	stream: any
-	text: any
-}
-global['File'] = File as any
 
 @registerPersistentClass( 'Test' )
 class Test extends Persistent {

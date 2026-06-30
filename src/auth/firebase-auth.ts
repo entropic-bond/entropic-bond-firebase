@@ -53,9 +53,10 @@ export class FirebaseAuth extends AuthService {
 					resolve( await this.toUserCredentials( userCredentials.user ) )
 				}
 				catch( error ) {
+					const { code, message } = error as { code: AuthErrorCode; message: string }
 					reject({ 
-						code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode, 
-						message: error.message 
+						code: camelCase( code.slice( 5 ) ) as AuthErrorCode, 
+						message
 					})
 				}
 			})
@@ -74,9 +75,10 @@ export class FirebaseAuth extends AuthService {
 				resolve( await this.toUserCredentials<T>( userCredentials.user ) )
 			}
 			catch( error ) {
+				const { code, message } = error as { code: string | number; message: string }
 				reject({ 
-					code: error.code === 400? 'missingPassword' : camelCase( error.code.slice( 5 )) as AuthErrorCode, 
-					message: error.message
+					code: code === 400 ? 'missingPassword' : camelCase( (code as string).slice( 5 )) as AuthErrorCode, 
+					message
 				})
 			}
 		})
@@ -92,10 +94,11 @@ export class FirebaseAuth extends AuthService {
 				await sendPasswordResetEmail( FirebaseHelper.instance.auth(), email )
 				resolve()
 			}
-			catch( error ) {
+			catch( error: unknown ) {
+				const { code, message } = error as { code: string; message: string }
 				reject({
-					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode,
-					message: error.message
+					code: camelCase( code.slice( 5 ) ) as AuthErrorCode,
+					message
 				})
 			}
 		})
@@ -119,9 +122,10 @@ export class FirebaseAuth extends AuthService {
 				})
 				resolve()
 			}
-			catch( error ) {
+			catch( error: unknown ) {
+				const { code } = error as { code: string }
 				reject({
-					code: camelCase( error.code.slice( 5 ) ) as AuthErrorCode,
+					code: camelCase( code.slice( 5 ) ) as AuthErrorCode,
 					message: verificationLink
 				})
 			}
@@ -139,7 +143,9 @@ export class FirebaseAuth extends AuthService {
 	}
 
 	linkAdditionalProvider( provider: AuthProvider ): Promise<unknown> {
-		const providerInstance = providerFactory[ provider ]()
+		const factory = providerFactory[ provider as keyof typeof providerFactory ]
+		if ( !factory ) throw new Error( `Provider ${ provider } doesn't support link` )
+		const providerInstance = factory()
 		const currentUser = FirebaseHelper.instance.auth().currentUser
 		if ( !currentUser ) throw new Error( `There is no logged in user` )
 
@@ -147,11 +153,12 @@ export class FirebaseAuth extends AuthService {
 	}
 
 	unlinkProvider( provider: AuthProvider ): Promise<unknown> {
+		const factory = providerFactory[ provider as keyof typeof providerFactory ]
+		if ( !factory ) throw new Error( `Provider ${ provider } doesn't support unlink` )
 		const { currentUser } = FirebaseHelper.instance.auth()
 		if ( !currentUser ) throw new Error( `There is no logged in user` )
 
-		currentUser.providerData
-		return unlink( currentUser, providerFactory[ provider ]().providerId )
+		return unlink( currentUser, factory().providerId )
 	}
 
 	private async toUserCredentials<T extends {}>( nativeUserCredential: User ): Promise<UserCredentials<T>> {
