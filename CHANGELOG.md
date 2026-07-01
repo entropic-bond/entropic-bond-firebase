@@ -1,3 +1,10 @@
+## [1.13.29](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.28...v1.13.29) (2026-06-30)
+
+
+### Bug Fixes
+
+* update to tsc 6.x.x ([c88c1e8](https://github.com/entropic-bond/entropic-bond-firebase/commit/c88c1e81e530727769a4b1021f5b8f96c1079f24))
+
 ## [1.13.28](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.27...v1.13.28) (2026-06-24)
 
 
