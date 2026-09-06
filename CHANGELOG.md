@@ -1,3 +1,10 @@
+## [1.13.32](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.31...v1.13.32) (2026-09-06)
+
+
+### Bug Fixes
+
+* onDocumentChange distinguishes deleted from not-yet-created documents close [#2](https://github.com/entropic-bond/entropic-bond-firebase/issues/2) ([114f0db](https://github.com/entropic-bond/entropic-bond-firebase/commit/114f0dbbe188cbc67285c48a87e66d2c6fee46ba))
+
 ## [1.13.31](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.30...v1.13.31) (2026-09-06)
 
 
