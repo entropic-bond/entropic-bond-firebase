@@ -19,19 +19,11 @@ export class FirebaseDatasource extends DataSource {
 		}
 	}
 
-	findById( id: string, collectionName: string ): Promise< DocumentObject > {
+	async findById( id: string, collectionName: string ): Promise< DocumentObject > {
 		const db = FirebaseHelper.instance.firestore()
 		
-		return new Promise<DocumentObject>( async resolve => {
-			try {
-				const docSnap = await getDoc( doc( db, collectionName, id ) )
-				resolve( docSnap.data() as DocumentObject )
-			} 
-			catch( error ) {
-				console.log( error )
-				return null
-			}
-		})
+		const docSnap = await getDoc( doc( db, collectionName, id ) )
+		return docSnap.data() as DocumentObject
 	}
 
 	save( collections: Collections ): Promise< void > {

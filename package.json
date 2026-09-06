@@ -37,7 +37,7 @@
     "build": "vite build",
     "prepare": "npm run build",
     "emulators": "firebase emulators:start --project demo-test",
-    "install-functions-dependencies": "cd functions && npm ci"
+    "install-functions-dependencies": "npm_config_allow_scripts= npm --prefix functions ci"
   },
   "repository": {
     "type": "git",
@@ -69,6 +69,7 @@
   },
   "allowScripts": {
     "@firebase/util@1.15.1": true,
-    "protobufjs@7.6.4": true
+    "protobufjs@7.6.4": true,
+    "@firebase/util@1.15.1,protobufjs@7.6.4": true
   }
 }
