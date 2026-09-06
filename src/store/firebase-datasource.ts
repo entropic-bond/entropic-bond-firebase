@@ -92,13 +92,22 @@ export class FirebaseDatasource extends DataSource {
 
 	override onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
 		const db = FirebaseHelper.instance.firestore()
+		let previousExists: boolean | undefined
 
 		return onSnapshot( doc( db, documentPath, documentId ), snapshot => {
+			const exists = snapshot.exists()
+
+			if ( previousExists === undefined && !exists ) {
+				previousExists = exists
+				return
+			}
+
+			previousExists = exists
 			listener({
-				type: 'update',
+				type: exists ? 'update' : 'delete',
 				before: undefined,
 				after: snapshot.data() as DocumentObject,
-				params: snapshot.metadata,
+				params: { ...snapshot.metadata, exists },
 				collectionPath: documentPath
 			})
 		})

@@ -599,7 +599,47 @@ describe( 'Firestore Model', ()=>{
 	describe( 'Data listeners', ()=>{
 		let unsubscribe: Unsubscribe
 
-		it( 'should listen for update changes in document', async ()=>{
+		it( 'should not emit a change for a not-yet-created document REQ-1', async ()=>{
+			const listener = vi.fn()
+			const syncListener = vi.fn()
+			const newUser = new TestUser( 'neverCreatedId' )
+			newUser.name = { firstName: 'Never', lastName: 'Created' }
+
+			const syncUnsub = model.onDocumentChange( 'user6', syncListener )
+			unsubscribe = model.onDocumentChange( 'neverCreatedId', listener )
+			await vi.waitFor(()=> expect( syncListener ).toHaveBeenCalled(), { timeout: 3000 })
+			syncUnsub()
+
+			await model.save( newUser )
+			unsubscribe()
+
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({
+				after: expect.objectContaining({ id: 'neverCreatedId' }),
+				type: 'update'
+			}))
+			expect( listener ).not.toHaveBeenCalledWith( expect.objectContaining({
+				after: undefined
+			}))
+		})
+
+		it( 'should emit delete type when an existing document is deleted REQ-2', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onDocumentChange( 'user6', listener )
+			await model.delete( loadedUser!.id )
+			unsubscribe()
+
+			expect( listener ).toHaveBeenCalledWith({
+				after: undefined,
+				before: undefined,
+				params: expect.objectContaining({ exists: false }),
+				type: 'delete',
+				collectionPath: 'TestUser'
+			})
+		})
+
+		it( 'should emit update type for existing documents REQ-3', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			const listener = vi.fn()
 
@@ -616,21 +656,21 @@ describe( 'Firestore Model', ()=>{
 			})
 		})
 
-		it( 'should listen for delete changes in document', async ()=>{
+		it( 'should expose existence state on emitted changes REQ-4', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			const listener = vi.fn()
 
 			unsubscribe = model.onDocumentChange( 'user6', listener )
+			await model.save( loadedUser! )
 			await model.delete( loadedUser!.id )
 			unsubscribe()
 
-			expect( listener ).toHaveBeenCalledWith({
-				after: undefined,
-				before: undefined,
-				params: expect.objectContaining({}),
-				type: 'update',
-				collectionPath: 'TestUser'
-			})
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({
+				params: expect.objectContaining({ exists: true })
+			}))
+			expect( listener ).toHaveBeenCalledWith( expect.objectContaining({
+				params: expect.objectContaining({ exists: false })
+			}))
 		})
 
 		it( 'should listen for update changes in collection', async ()=>{
