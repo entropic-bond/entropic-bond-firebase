@@ -1,3 +1,10 @@
+## [1.13.31](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.30...v1.13.31) (2026-09-06)
+
+
+### Bug Fixes
+
+* let errors to propagate in findById ([8d85a2b](https://github.com/entropic-bond/entropic-bond-firebase/commit/8d85a2b6bce8967f2252602691b509afe02aa997)), closes [#1](https://github.com/entropic-bond/entropic-bond-firebase/issues/1)
+
 ## [1.13.30](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.29...v1.13.30) (2026-07-01)
 
 
