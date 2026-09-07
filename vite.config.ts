@@ -1,6 +1,5 @@
 import { resolve } from 'path'
 import { defineConfig } from 'vitest/config'
-import dts from 'vite-plugin-dts'
 
 export default defineConfig({
   test: {
@@ -17,7 +16,4 @@ export default defineConfig({
 		sourcemap: true,
 		outDir: 'lib',
 	},
-	plugins: [
-		dts({ tsconfigPath: './tsconfig-build.json' })
-	]
 })

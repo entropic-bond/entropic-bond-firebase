@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { Model, Persistent, Store } from 'entropic-bond'
+import { Model, Persistent, Store, TransactionConflictError } from 'entropic-bond'
 import { FirebaseDatasource } from './firebase-datasource'
 import { FirebaseHelper } from '../firebase-helper'
 import { TestUser, DerivedUser, SubClass } from '../mocks/test-user'
@@ -593,6 +593,64 @@ describe( 'Firestore Model', ()=>{
 			const loaded = await model.findById( subClass.id )
 
 			expect( loaded?.year ).toBe( 3452 )
+		})
+	})
+
+	describe( 'Transactions', ()=>{
+		it( 'should update a document inside a transaction', async ()=>{
+			const result = await model.runTransaction( async handle => {
+				const user = await handle.findById( 'user1' )
+				user!.age = 99
+				await handle.save( user! )
+				return user!
+			})
+
+			expect( result.id ).toBe( 'user1' )
+			expect( result.age ).toBe( 99 )
+			const updated = await model.findById( 'user1' )
+			expect( updated?.age ).toBe( 99 )
+		})
+
+		it( 'should delete a document inside a transaction', async ()=>{
+			const result = await model.runTransaction( async handle => {
+				const user = await handle.findById( 'user1' )
+				await handle.delete( user! )
+				return user!
+			})
+
+			expect( result.id ).toBe( 'user1' )
+			expect( await model.findById( 'user1' ) ).toBeUndefined()
+		})
+
+		it( 'should return a value from a transaction', async ()=>{
+			const result = await model.runTransaction( async handle => {
+				const user = await handle.findById( 'user1' )
+				return user!
+			})
+
+			expect( result.age ).toBe( 23 )
+		})
+
+		it( 'should atomically increment a counter with concurrent transactions', async ()=>{
+			const increment = () => model.runTransaction( async handle => {
+				const user = await handle.findById( 'user1' )
+				user!.age = ( user!.age ?? 0 ) + 1
+				await handle.save( user! )
+				return user!
+			})
+
+			await Promise.all([ increment(), increment(), increment() ])
+
+			const final = await model.findById( 'user1' )
+			expect( final?.age ).toBe( 26 )
+		})
+
+		it( 'should reject with TransactionConflictError when the transaction cannot commit due to a conflict', async ()=>{
+			await expect(
+				model.runTransaction( async () => {
+					throw { code: 'aborted', message: 'the transaction was aborted due to a conflict' }
+				})
+			).rejects.toBeInstanceOf( TransactionConflictError )
 		})
 	})
 

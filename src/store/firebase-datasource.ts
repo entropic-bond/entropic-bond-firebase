@@ -1,5 +1,5 @@
-import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, Unsubscriber } from 'entropic-bond'
+import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, runTransaction as firestoreRunTransaction, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
+import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, TransactionConflictError, TransactionHandle, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
 
 interface ConstraintsContainer {
@@ -56,6 +56,31 @@ export class FirebaseDatasource extends DataSource {
 		const db = FirebaseHelper.instance.firestore()
 
 		return deleteDoc( doc( db, collectionName, id ) )
+	}
+
+	override runTransaction< Result >( fn: ( handle: TransactionHandle ) => Promise< Result > ): Promise< Result > {
+		const db = FirebaseHelper.instance.firestore()
+
+		return firestoreRunTransaction( db, async transaction => {
+			const handle: TransactionHandle = {
+				findById: async ( id, collectionName ) => {
+					const snap = await transaction.get( doc( db, collectionName, id ) )
+					return snap.exists() ? snap.data() as DocumentObject : undefined
+				},
+				save: async ( id, collectionName, docData ) => {
+					transaction.set( doc( db, collectionName, id ), docData as DocumentData, { merge: true } )
+				},
+				delete: async ( id, collectionName ) => {
+					transaction.delete( doc( db, collectionName, id ) )
+				}
+			}
+			return fn( handle )
+		}).catch( error => {
+			if ( error?.code === 'aborted' || error?.code === 'resource-exhausted' || error?.code === 'deadline-exceeded' ) {
+				throw new TransactionConflictError()
+			}
+			throw error
+		})
 	}
 
 	next( maxDocs?: number ): Promise< DocumentObject[] > {

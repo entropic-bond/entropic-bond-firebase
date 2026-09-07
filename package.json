@@ -34,7 +34,7 @@
   "scripts": {
     "test-vi": "vitest",
     "test": "npm run install-functions-dependencies && firebase emulators:exec --project demo-test vitest",
-    "build": "vite build",
+    "build": "vite build && tsc -p tsconfig.dts.json",
     "prepare": "npm run build",
     "emulators": "firebase emulators:start --project demo-test",
     "install-functions-dependencies": "npm_config_allow_scripts= npm --prefix functions ci"
@@ -54,22 +54,20 @@
   },
   "homepage": "https://github.com/entropic-bond/entropic-bond-firebase#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@types/node": "^26.0.1",
-    "semantic-release": "^25.0.5",
-    "typescript": "^6.0.3",
-    "vite": "^8.1.2",
-    "vite-plugin-dts": "^5.0.3",
-    "vitest": "^4.1.9"
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
+    "@types/node": "^26.4.1",
+    "semantic-release": "^25.0.9",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "vitest": "^5.0.0"
   },
   "dependencies": {
-    "entropic-bond": "^1.59.5",
-    "firebase": "^12.15.0"
+    "entropic-bond": "^1.60.2",
+    "firebase": "^12.18.0"
   },
   "allowScripts": {
     "@firebase/util@1.15.1": true,
-    "protobufjs@7.6.4": true,
-    "@firebase/util@1.15.1,protobufjs@7.6.4": true
+    "protobufjs@7.6.4": true
   }
 }
