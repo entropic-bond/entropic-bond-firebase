@@ -1,3 +1,15 @@
+# [1.14.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.32...v1.14.0) (2026-09-07)
+
+
+### Bug Fixes
+
+* update entry resolution method in vite.config.ts ([99201cc](https://github.com/entropic-bond/entropic-bond-firebase/commit/99201cc3303e7f3b28d19890f8e4f0fed0b3c98d))
+
+
+### Features
+
+* implement runTransaction ([a3ce407](https://github.com/entropic-bond/entropic-bond-firebase/commit/a3ce4072a1ab9ed69dd2405030ccf37d47b7a807))
+
 ## [1.13.32](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.31...v1.13.32) (2026-09-06)
 
 
