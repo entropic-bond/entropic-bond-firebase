@@ -1,4 +1,3 @@
-import { resolve } from 'path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -9,7 +8,7 @@ export default defineConfig({
 	},
 	build: {
 		lib: {
-			entry: resolve( __dirname, 'src/index.ts' ),
+			entry: import.meta.dirname + '/src/index.ts',
 			name: 'entropic-bond-firebase',
 			fileName: 'entropic-bond-firebase'
 		},
