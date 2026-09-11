@@ -59,15 +59,15 @@
     "@types/node": "^26.4.1",
     "semantic-release": "^25.0.9",
     "typescript": "^7.0.2",
-    "vite": "^8.2.2",
+    "vite": "^8.3.0",
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "entropic-bond": "^1.60.2",
-    "firebase": "^12.18.0"
+    "entropic-bond": "^1.61.0",
+    "firebase": "^12.19.0"
   },
   "allowScripts": {
-    "@firebase/util@1.15.1": true,
-    "protobufjs@7.6.4": true
+    "@firebase/util@1.15.3": true,
+    "protobufjs@7.6.6": true
   }
 }
