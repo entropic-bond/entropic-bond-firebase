@@ -739,15 +739,20 @@ describe( 'Firestore Model', ()=>{
 			await model.save( loadedUser! )
 			unsubscribe()
 
-			expect( listener ).toHaveBeenCalledWith([{ 
-				after: expect.objectContaining({ id: 'user6' }),
-				type: 'create',
-				before: undefined,
-				params: {}
-			}])
+			expect( listener ).toHaveBeenCalledWith(
+				[expect.objectContaining({ 
+					after: expect.objectContaining({ id: 'user6' }),
+					type: 'create',
+					before: undefined,
+					params: {}
+				})],
+				expect.arrayContaining([
+					expect.objectContaining({ id: 'user6' })
+				])
+			)
 		})
 
-		it.skip( 'should listen for deletions in collection', async ()=>{
+		it( 'should listen for deletions in collection', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			const listener = vi.fn()
 
@@ -755,12 +760,15 @@ describe( 'Firestore Model', ()=>{
 			await model.delete( loadedUser!.id )
 			unsubscribe()
 
-			expect( listener ).toHaveBeenCalledWith([{ 
-				after: expect.objectContaining({ id: 'user6' }),
-				type: 'delete',
-				before: undefined,
-				params: {}
-			}])
+			expect( listener ).toHaveBeenCalledWith(
+				[expect.objectContaining({ 
+					after: expect.objectContaining({ id: 'user6' }),
+					type: 'delete',
+					before: undefined,
+					params: {}
+				})],
+				expect.arrayContaining([])
+			)
 		})
 
 	})

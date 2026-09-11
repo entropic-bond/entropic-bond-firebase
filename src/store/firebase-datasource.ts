@@ -111,7 +111,7 @@ export class FirebaseDatasource extends DataSource {
 				before: undefined,
 				params: {}
 			} as DocumentChange<DocumentObject> ))
-			listener( changes )
+			listener( changes, snapshot.docs.map( d => d.data() as DocumentObject ) )
 		})
 	}
 
