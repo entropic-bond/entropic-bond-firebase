@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.14.1...v2.0.0) (2026-10-05)
+
+
+### Bug Fixes
+
+* migrate FirebaseDatasource to the 2.0.0 QueryCursor API ([#5](https://github.com/entropic-bond/entropic-bond-firebase/issues/5)) ([322cd9e](https://github.com/entropic-bond/entropic-bond-firebase/commit/322cd9e3e76977e18460725427c3aa8b8b88748f)), closes [#4](https://github.com/entropic-bond/entropic-bond-firebase/issues/4)
+
+
+### BREAKING CHANGES
+
+* FirebaseDatasource.find() now returns Promise<QueryCursor>
+and FirebaseDatasource.next() was removed. Consumers paginate through the
+cursor returned by find(). Requires entropic-bond@^2.0.0.
+
 ## [1.14.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.14.0...v1.14.1) (2026-09-11)
 
 
