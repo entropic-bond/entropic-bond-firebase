@@ -16,7 +16,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "entropic-bond": "^1.61.0",
+    "entropic-bond": "^2.0.0",
     "firebase-admin": "^14.4.0",
     "firebase-functions": "^7.3.2"
   },
