@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v2.0.0...v2.0.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* **deps:** rebuild bundle against entropic-bond ^2.0.4 ([#7](https://github.com/entropic-bond/entropic-bond-firebase/issues/7)) ([e249739](https://github.com/entropic-bond/entropic-bond-firebase/commit/e249739ccfe2e3da8ea4b7a462dd896bdeb396b6))
+
 # [2.0.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.14.1...v2.0.0) (2026-10-05)
 
 
