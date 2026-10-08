@@ -63,7 +63,7 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "entropic-bond": "^1.60.2",
+    "entropic-bond": "^1.61.1",
     "firebase": "^12.18.0"
   },
   "allowScripts": {
