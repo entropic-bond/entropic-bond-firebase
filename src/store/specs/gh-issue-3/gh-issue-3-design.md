@@ -11,7 +11,10 @@ changes to the listener (`listener( changes )`), while the core library
 This change passes the full current query result as the second argument,
 documents the before/after/snapshot semantics of both listeners, and bumps the
 `entropic-bond` dependency to a release that declares the two-argument
-contract.
+contract. (Merge note: on the merged tree the dependency stays on `master`'s
+`entropic-bond` ^2.0.x range — ^2.0.4 at merge time, since bumped to ^2.0.5 —
+which is ≥ 1.61.0 and therefore already declares the
+contract; the development-side ^1.61.1 bump is superseded.)
 
 ## Data flow
 
@@ -52,9 +55,12 @@ sequenceDiagram
 - **Dependency bump.** `entropic-bond` is raised from `^1.60.2` to `^1.61.1`
   (v1.61.0 is the first release containing the snapshot contract). A larger
   bump to `^2.0.x` would also require the QueryCursor migration (PR #5), which
-  is out of scope for this issue. Per the standing rule, dependency bumps do
-  not get specs or tests. `functions/` does not consume the listener types, so
-  its manifest is untouched.
+  was out of scope for this issue. On the merged tree the QueryCursor
+  migration is present, so `master`'s ^2.0.x range is kept (^2.0.5 after the
+  post-merge bump) — it satisfies the
+  ≥ 1.61.0 contract and the ^1.61.1 bump is dropped. Per the standing rule,
+  dependency bumps do not get specs or tests. `functions/` does not consume
+  the listener types, so its manifest is untouched.
 - **Specs live only in the `.feature` file** (the scenario *is* the
   requirement); this document carries the design decisions.
 
@@ -86,8 +92,10 @@ Strengths:
 Weaknesses:
 - Snapshot arrays are re-mapped on every notification (allocation per
   snapshot) — negligible for the query sizes this API targets.
-- The `^1.61.1` range will diverge from `master`'s `^2.0.4` until the
-  QueryCursor migration lands on `development`.
+- ~~The `^1.61.1` range will diverge from `master`'s `^2.0.4` until the
+  QueryCursor migration lands on `development`.~~ Resolved by the merge: one
+  range (^2.0.5 after the post-merge bump) and the QueryCursor migration are
+  both in the merged tree.
 
 ## Audit note (code-auditor, step 2 — no major improvements detected)
 

@@ -575,6 +575,43 @@ describe( 'Firestore Model', ()=>{
 				const docs = await model.next( 20 )
 				expect( docs ).toHaveLength( 0 )
 			})
+
+			it( 'interleaved pagination on two models of one collection keeps each result set [REQ-2]', async ()=>{
+				const otherModel = Store.getModel<TestUser>( 'TestUser' )
+				await model.find().get( 2 )
+				await otherModel.find().get( 3 )
+
+				const firstPage = await model.next()
+				const secondPage = await otherModel.next()
+
+				expect( firstPage.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+				expect( secondPage.map( doc => doc.id )).toEqual([ 'user4', 'user5', 'user6' ])
+			})
+
+			it( 'interleaved pagination across collections does not mix result sets [REQ-3]', async ()=>{
+				const subClassModel = Store.getModel<SubClass>( 'SubClass' )
+				const subClass = new SubClass()
+				subClass.year = 2050
+				await subClassModel.save( subClass )
+
+				await model.find().get( 2 )
+				await subClassModel.find().get( 1 )
+
+				const docs = await model.next()
+
+				expect( docs.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+			})
+
+			it( 're-running a query resets pagination for that model only [REQ-4]', async ()=>{
+				const otherModel = Store.getModel<TestUser>( 'TestUser' )
+				await model.find().get( 2 )
+				await otherModel.find().get( 2 )
+				await model.find().get()
+
+				const docs = await otherModel.next()
+
+				expect( docs.map( doc => doc.id )).toEqual([ 'user3', 'user4' ])
+			})
 		})
 	})
 
