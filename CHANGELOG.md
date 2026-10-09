@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/entropic-bond/entropic-bond-firebase/compare/v2.0.1...v2.0.2) (2026-10-09)
+
+
+### Bug Fixes
+
+* pass full query snapshot to onCollectionChange close [#3](https://github.com/entropic-bond/entropic-bond-firebase/issues/3) ([#8](https://github.com/entropic-bond/entropic-bond-firebase/issues/8)) ([d1bc30f](https://github.com/entropic-bond/entropic-bond-firebase/commit/d1bc30fa5fc8df79eae902791ac7d15f4e5fa2f8)), closes [entropic-bond#12](https://github.com/entropic-bond/issues/12)
+
 ## [2.0.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v2.0.0...v2.0.1) (2026-10-06)
 
 
