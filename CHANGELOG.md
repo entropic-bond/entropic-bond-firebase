@@ -1,3 +1,43 @@
+## [2.0.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v2.0.0...v2.0.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* **deps:** rebuild bundle against entropic-bond ^2.0.4 ([#7](https://github.com/entropic-bond/entropic-bond-firebase/issues/7)) ([e249739](https://github.com/entropic-bond/entropic-bond-firebase/commit/e249739ccfe2e3da8ea4b7a462dd896bdeb396b6))
+
+# [2.0.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.14.1...v2.0.0) (2026-10-05)
+
+
+### Bug Fixes
+
+* migrate FirebaseDatasource to the 2.0.0 QueryCursor API ([#5](https://github.com/entropic-bond/entropic-bond-firebase/issues/5)) ([322cd9e](https://github.com/entropic-bond/entropic-bond-firebase/commit/322cd9e3e76977e18460725427c3aa8b8b88748f)), closes [#4](https://github.com/entropic-bond/entropic-bond-firebase/issues/4)
+
+
+### BREAKING CHANGES
+
+* FirebaseDatasource.find() now returns Promise<QueryCursor>
+and FirebaseDatasource.next() was removed. Consumers paginate through the
+cursor returned by find(). Requires entropic-bond@^2.0.0.
+
+## [1.14.1](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.14.0...v1.14.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* add full query snapshot to onCollectionChange ([7581aae](https://github.com/entropic-bond/entropic-bond-firebase/commit/7581aae57c249c09d4ef20a74efe6d3b7b24a163)), closes [entropic-bond#12](https://github.com/entropic-bond/issues/12)
+
+# [1.14.0](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.32...v1.14.0) (2026-09-07)
+
+
+### Bug Fixes
+
+* update entry resolution method in vite.config.ts ([99201cc](https://github.com/entropic-bond/entropic-bond-firebase/commit/99201cc3303e7f3b28d19890f8e4f0fed0b3c98d))
+
+
+### Features
+
+* implement runTransaction ([a3ce407](https://github.com/entropic-bond/entropic-bond-firebase/commit/a3ce4072a1ab9ed69dd2405030ccf37d47b7a807))
+
 ## [1.13.32](https://github.com/entropic-bond/entropic-bond-firebase/compare/v1.13.31...v1.13.32) (2026-09-06)
 
 

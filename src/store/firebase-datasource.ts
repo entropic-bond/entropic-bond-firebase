@@ -1,12 +1,6 @@
 import { and, collection, connectFirestoreEmulator, deleteDoc, doc, DocumentData, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, Query, query, QueryDocumentSnapshot, QueryFieldFilterConstraint, QueryNonFilterConstraint, runTransaction as firestoreRunTransaction, startAfter, where, WhereFilterOp, writeBatch } from 'firebase/firestore'
-import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryObject, QueryOperator, TransactionConflictError, TransactionHandle, Unsubscriber } from 'entropic-bond'
+import { CollectionChangeListener, Collections, DataSource, DocumentChange, DocumentChangeListener, DocumentObject, QueryCursor, QueryObject, QueryOperator, TransactionConflictError, TransactionHandle, Unsubscriber } from 'entropic-bond'
 import { EmulatorConfig, FirebaseHelper, FirebaseQuery } from '../firebase-helper'
-
-interface ConstraintsContainer {
-	andConstraints: QueryFieldFilterConstraint[]
-	orConstraints: QueryFieldFilterConstraint[]
-	nonFilterConstraints: QueryNonFilterConstraint[]
-}
 
 export class FirebaseDatasource extends DataSource {
 	constructor( emulator?: EmulatorConfig ) {
@@ -40,15 +34,15 @@ export class FirebaseDatasource extends DataSource {
 		return batch.commit()
 	}
 
-	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< DocumentObject[] > {
-		const query = this.queryObjectToQueryConstraints( queryObject, collectionName )
-		return this.getFromQuery( query )
+	find( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise< QueryCursor > {
+		const baseQuery = this.queryObjectToQueryConstraints( queryObject, collectionName )
+		return Promise.resolve( new FirebaseQueryCursor( baseQuery, queryObject.limit ?? 0 ) )
 	}
 
 	async count( queryObject: QueryObject<DocumentObject>, collectionName: string ): Promise<number> {
-		const query = this.queryObjectToQueryConstraints( queryObject, collectionName )
+		const baseQuery = this.queryObjectToQueryConstraints( queryObject, collectionName )
 		
-		const snapShot = await getCountFromServer( query )
+		const snapShot = await getCountFromServer( baseQuery )
 		return snapShot.data().count
 	}
 
@@ -83,21 +77,6 @@ export class FirebaseDatasource extends DataSource {
 		})
 	}
 
-	next( maxDocs?: number ): Promise< DocumentObject[] > {
-		if( !this._lastConstraints || !this._lastCollectionName ) throw new Error('You should perform a query prior to using method next')
-		if ( !this._lastDocRetrieved ) return Promise.resolve([])
-
-		const db = FirebaseHelper.instance.firestore()
-		this._lastLimit = maxDocs || this._lastLimit
-
-		const constraints = this._lastConstraints.nonFilterConstraints.concat(
-			limit( this._lastLimit ),
-			startAfter( this._lastDocRetrieved )
-		)
-
-		return this.getFromQuery( query( collection( db, this._lastCollectionName ), or( ...this._lastConstraints.orConstraints, and( ...this._lastConstraints.andConstraints ) ), ...constraints ) )
-	}
-
 	// prev should be used with next in reverse order
 	// prev( limit?: number ): Promise< DocumentObject[] > {
 	// }
@@ -110,8 +89,12 @@ export class FirebaseDatasource extends DataSource {
 	 * result set is reported with type 'delete'. The `before` property of every
 	 * change is always undefined: Firestore snapshots carry no previous state.
 	 */
-	override onCollectionChange( query: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
-		const queryConstraints = this.queryObjectToQueryConstraints( query as unknown as QueryObject<DocumentObject>, collectionName )
+	override onCollectionChange( queryObject: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
+		const baseQuery = this.queryObjectToQueryConstraints( queryObject, collectionName )
+		const queryConstraints = queryObject.limit
+			? query( baseQuery, limit( queryObject.limit ) )
+			: baseQuery
+
 		return onSnapshot( queryConstraints, snapshot => {
 			const changes = snapshot.docChanges().map( change => ({
 				after: change.doc.data() as DocumentObject,
@@ -172,19 +155,6 @@ export class FirebaseDatasource extends DataSource {
 		if ( queryObject.sort?.propertyName ) {
 			nonFilterConstraints.push( orderBy( queryObject.sort.propertyName, queryObject.sort.order ) )
 		}
-		
-		this._lastConstraints = {
-			orConstraints,
-			andConstraints,
-			nonFilterConstraints
-		}
-
-		this._lastCollectionName = collectionName
-
-		if( queryObject.limit ) {
-			this._lastLimit = queryObject.limit
-			nonFilterConstraints.push( limit( queryObject.limit ) )
-		}
 
 		return query( collection( db, collectionName ), or( ...orConstraints, and( ...andConstraints ) ), ...nonFilterConstraints )
 	}
@@ -203,27 +173,60 @@ export class FirebaseDatasource extends DataSource {
 		}
 	}
 
-	private getFromQuery( query: FirebaseQuery ) {
-		return new Promise< DocumentObject[] >( async resolve => {
-			const doc = await getDocs( query )
-
-			if ( doc.empty ) {
-				this._lastDocRetrieved = undefined
-				resolve( [] )
-			}
-			else {
-				this._lastDocRetrieved = doc.docs[ doc.docs.length-1 ]
-				resolve( doc.docs.map( doc => doc.data() as DocumentObject ) ) 
-			}
-		})
-	}
-
 	protected override resolveCollectionPaths( template: string ): Promise<string[]> {
 		throw new Error('Method not implemented.')
 	}
+}
 
-	private _lastDocRetrieved: QueryDocumentSnapshot<DocumentData> | undefined
-	private _lastConstraints: ConstraintsContainer | undefined
-	private _lastLimit: number = 0
-	private _lastCollectionName: string | undefined
+/**
+ * A {@link QueryCursor} over one Firestore query. Firestore paginates server
+ * side with `startAfter( snapshot )`, so instead of preloading the whole match
+ * set this cursor keeps the base query, the page size and the last retrieved
+ * snapshot and rebuilds the query on every `next()` call. All pagination state
+ * lives in the cursor instance, never on the shared data source.
+ */
+export class FirebaseQueryCursor extends QueryCursor {
+	/**
+	 * @param baseQuery the query with the filters and sort, without limit
+	 * @param pageSize the amount of documents per page. Zero means no limit.
+	 */
+	constructor( baseQuery: FirebaseQuery, pageSize: number ) {
+		super([], pageSize )
+		this._baseQuery = baseQuery
+		this._pageSize = pageSize
+	}
+
+	/**
+	 * Retrieves the next page of documents and advances the cursor. Once the
+	 * result set is exhausted, later calls resolve to an empty page without
+	 * querying Firestore again.
+	 * @param limit the max amount of documents to retrieve. When set it replaces
+	 * the cursor's current page size
+	 * @returns a promise resolving to the next page of documents
+	 */
+	override next( limitTo?: number ): Promise< DocumentObject[] > {
+		if ( this._exhausted ) return Promise.resolve([])
+		if ( limitTo !== undefined ) this._pageSize = limitTo
+
+		const constraints: QueryNonFilterConstraint[] = []
+		if ( this._pageSize > 0 ) constraints.push( limit( this._pageSize ) )
+		if ( this._lastSnapshot ) constraints.push( startAfter( this._lastSnapshot ) )
+
+		return getDocs( query( this._baseQuery, ...constraints ) ).then( snapshot => {
+			if ( snapshot.empty ) {
+				this._exhausted = true
+				return []
+			}
+
+			this._lastSnapshot = snapshot.docs[ snapshot.docs.length - 1 ]
+			if ( this._pageSize > 0 && snapshot.size < this._pageSize ) this._exhausted = true
+
+			return snapshot.docs.map( doc => doc.data() as DocumentObject )
+		})
+	}
+
+	private _baseQuery: FirebaseQuery
+	private _pageSize: number
+	private _lastSnapshot: QueryDocumentSnapshot<DocumentData> | undefined
+	private _exhausted = false
 }
