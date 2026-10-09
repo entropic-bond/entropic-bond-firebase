@@ -76,3 +76,29 @@ notification-section removal wins — dev untouched), `CHANGELOG.md`,
 - Weaknesses: the gh-issue-3 design doc still narrates the ^1.61.1 bump
   decision; its dependency-bump paragraph is adapted to the merged ^2.0.4
   reality so the document does not contradict the tree.
+
+## Audit note (code-auditor, step 2 — no major improvements detected)
+
+- **Overview**: the merged `FirebaseDatasource` is master's released QueryCursor
+  2.0 implementation plus the ported listener JSDoc; pagination state is fully
+  cursor-local, listeners add no state, and the snapshot second argument reuses
+  the incoming `QuerySnapshot`. No architectural friction attributable to the
+  merge was found, so no refactors were applied (nothing was left unstaged).
+- **Files**: `src/store/firebase-datasource.ts`, `package.json`,
+  `package-lock.json`, `src/store/specs/gh-issue-3/*`,
+  `specs/merge-dev-master/*`.
+- **Requirement traceability**: [REQ-1] [REQ-2] [REQ-4] →
+  `specs/merge-dev-master/merge-invariants.spec.ts`; [REQ-3] → gh-issue-4
+  [REQ-2…4] pagination tests; [REQ-5] → gh-issue-3 [REQ-1…4] listener tests;
+  [REQ-6] `npx tsc --noEmit`; [REQ-7] `npm run build`; [REQ-8] `npm test`;
+  [REQ-9] merge commit `6e268d6` parents `abd70a0` (development lineage) and
+  `fd36c79` (master).
+- **Recommendation strength — Worth exploring**: `count()` no longer honours
+  `queryObject.limit` since the QueryCursor migration moved `limit` out of
+  `queryObjectToQueryConstraints`, so a limited query counts the whole match
+  set. This is master's pre-existing released behavior, out of the merge's
+  scope; flagged for a follow-up issue.
+- **Recommendation strength — Speculative**: the snapshot array is re-mapped on
+  every notification (allocation per snapshot; already noted in the gh-issue-3
+  design doc) and collection deltas carry `params: {}` while document deltas
+  carry Firestore metadata.
