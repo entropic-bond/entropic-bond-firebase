@@ -2,14 +2,14 @@ Feature: Merge development into master (fb-merge-dev-master)
 
   Scenario: Keep the entropic-bond dependency at the master release version. [REQ-1]
     Given the merged package manifest
-    Then it declares the entropic-bond dependency as '^2.0.4'
+    Then it declares the entropic-bond dependency as '^2.0.5'
     And it does not declare the development-side '^1.61.1' downgrade
 
   Scenario: Keep the lockfile consistent with the kept manifest. [REQ-2]
     Given the merged lockfile
     When a clean install is performed from it
     Then the install succeeds without modifying it
-    And it resolves entropic-bond to a version satisfying '^2.0.4'
+    And it resolves entropic-bond to a version satisfying '^2.0.5'
 
   Scenario: Keep the cursor-based 2.0 pagination behavior. [REQ-3]
     Given the merged FirebaseDatasource

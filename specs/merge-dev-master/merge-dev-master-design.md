@@ -33,7 +33,7 @@ gitGraph
 
 | File | Resolution | Why |
 | --- | --- | --- |
-| `package.json` | Take master's (`entropic-bond` ^2.0.4, version 2.0.1, vite/firebase bumps) | Dev's only change is the ^1.61.1 bump, subsumed by ^2.0.4 ([REQ-1]) |
+| `package.json` | Take master's (`entropic-bond` ^2.0.4, version 2.0.1, vite/firebase bumps) | Dev's only change is the ^1.61.1 bump, subsumed by ^2.0.4 ([REQ-1]; since bumped to ^2.0.5, see Follow-up) |
 | `package-lock.json` | Take master's | Lock must match the kept manifest; dev's only delta is the 1.61.1 pin ([REQ-2]) |
 | `src/store/firebase-datasource.ts` | Master's QueryCursor 2.0 file + port dev's two JSDoc blocks | Master already passes the full snapshot (`7581aae`); dev's listener-semantics documentation is missing and is asserted by gh-issue-3 [REQ-4] |
 | `src/store/firebase-datasource.spec.ts` | Master's gh-issue-4 pagination tests + dev's gh-issue-3 listener tests (REQ-1…REQ-4) | Dev's listener tests are a stricter superset of master's two rewritten listener tests (waitFor + exact snapshot instead of post-hoc assertions) ([REQ-3], [REQ-5]) |
@@ -76,6 +76,15 @@ notification-section removal wins — dev untouched), `CHANGELOG.md`,
 - Weaknesses: the gh-issue-3 design doc still narrates the ^1.61.1 bump
   decision; its dependency-bump paragraph is adapted to the merged ^2.0.4
   reality so the document does not contradict the tree.
+
+## Follow-up — entropic-bond ^2.0.5
+
+After the merge, the dependency declaration was bumped from ^2.0.4 to the
+latest npm release ^2.0.5. [REQ-1] and [REQ-2] are requirement statements
+about the current tree, so the scenario, `merge-invariants.spec.ts`, the
+manifest and the lockfile were updated in the same change (never renumbered);
+the conflict-resolution table above keeps the historical merge record.
+Gates re-run: `npm ci`, `npx tsc --noEmit`, `npm test`, `npm run build`.
 
 ## Audit note (code-auditor, step 2 — no major improvements detected)
 

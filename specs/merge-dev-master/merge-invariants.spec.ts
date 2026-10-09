@@ -9,7 +9,7 @@ describe( 'Merge development into master', ()=>{
 	it( 'keeps entropic-bond at the master release version REQ-1', ()=>{
 		const manifest = readJson( 'package.json' )
 
-		expect( manifest.dependencies['entropic-bond'] ).toBe( '^2.0.4' )
+		expect( manifest.dependencies['entropic-bond'] ).toBe( '^2.0.5' )
 	} )
 
 	it( 'keeps the lockfile consistent with the kept manifest REQ-2', ()=>{
