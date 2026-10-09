@@ -8,6 +8,7 @@ import mockData from '../mocks/mock-data.json'
 import { Unsubscribe } from 'firebase/auth'
 
 import { createRequire } from 'node:module'
+import { readFileSync } from 'node:fs'
 const _require = createRequire( import.meta.url )
 try {
 	const constants = _require( '@grpc/grpc-js/build/src/constants' )
@@ -768,44 +769,77 @@ describe( 'Firestore Model', ()=>{
 			}))
 		})
 
-		it( 'should listen for update changes in collection', async ()=>{
-			const loadedUser = await model.findById( 'user6' )
+		it( 'should deliver the full current query result as the second listener argument REQ-1', async ()=>{
 			const listener = vi.fn()
 
 			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user6' ), listener )
-			await model.save( loadedUser! )
-			unsubscribe()
-
-			expect( listener ).toHaveBeenCalledWith(
-				[expect.objectContaining({ 
+			await vi.waitFor(()=> expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({
 					after: expect.objectContaining({ id: 'user6' }),
 					type: 'create',
 					before: undefined,
 					params: {}
-				})],
-				expect.arrayContaining([
-					expect.objectContaining({ id: 'user6' })
-				])
-			)
+				}) ],
+				[ expect.objectContaining({ id: 'user6' }) ]
+			), { timeout: 3000 })
+			unsubscribe()
 		})
 
-		it( 'should listen for deletions in collection', async ()=>{
+		it( 'should report a document removed from the query as a delete change REQ-2', async ()=>{
 			const loadedUser = await model.findById( 'user6' )
 			const listener = vi.fn()
 
-			unsubscribe = model.onCollectionChange( model.find(), listener )
+			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user6' ), listener )
+			await vi.waitFor(()=> expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ type: 'create' }) ],
+				expect.anything()
+			), { timeout: 3000 })
+
 			await model.delete( loadedUser!.id )
 			await vi.waitFor(()=> expect( listener ).toHaveBeenCalledWith(
-				[expect.objectContaining({ 
-					after: expect.objectContaining({ id: 'user6' }),
+				[ expect.objectContaining({
 					type: 'delete',
-					before: undefined,
-					params: {}
-				})],
-				expect.arrayContaining([])
-			))
+					after: expect.objectContaining({ id: 'user6' }),
+					before: undefined
+				}) ],
+				expect.anything()
+			), { timeout: 3000 })
 			unsubscribe()
-		}, 15000 )
+		})
+
+		it( 'should exclude a removed document from the snapshot of the delete change REQ-3', async ()=>{
+			const loadedUser = await model.findById( 'user6' )
+			const listener = vi.fn()
+
+			unsubscribe = model.onCollectionChange( model.find().where( 'id', '==', 'user6' ), listener )
+			await vi.waitFor(()=> expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ type: 'create' }) ],
+				expect.anything()
+			), { timeout: 3000 })
+
+			await model.delete( loadedUser!.id )
+			await vi.waitFor(()=> expect( listener ).toHaveBeenCalledWith(
+				[ expect.objectContaining({ type: 'delete' }) ],
+				expect.not.arrayContaining([ expect.objectContaining({ id: 'user6' }) ])
+			), { timeout: 3000 })
+			unsubscribe()
+		})
+
+		it( 'should document the change notification semantics for consumers REQ-4', ()=>{
+			const source = readFileSync( new URL( './firebase-datasource.ts', import.meta.url ), 'utf8' )
+			const docOf = ( method: string ) => {
+				const anchor = source.lastIndexOf( `override ${ method }` )
+				const start = source.lastIndexOf( '/**', anchor )
+				return start < 0 ? undefined : source.slice( start, anchor )
+			}
+
+			expect( docOf( 'onCollectionChange' ) ).toMatch( /full current query result/ )
+			expect( docOf( 'onCollectionChange' ) ).toMatch( /snapshot/ )
+			expect( docOf( 'onCollectionChange' ) ).toMatch( /before/ )
+			expect( docOf( 'onDocumentChange' ) ).toMatch( /before/ )
+			expect( docOf( 'onDocumentChange' ) ).toMatch( /after/ )
+			expect( docOf( 'onDocumentChange' ) ).toMatch( /delete/ )
+		})
 
 	})
 

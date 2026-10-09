@@ -81,6 +81,14 @@ export class FirebaseDatasource extends DataSource {
 	// prev( limit?: number ): Promise< DocumentObject[] > {
 	// }
 
+	/**
+	 * Subscribes to changes of a query result set.
+	 * The listener receives the delta changes as first argument and the
+	 * full current query result — the snapshot — as second argument, reflecting
+	 * the result set after the changes have been applied. A document leaving the
+	 * result set is reported with type 'delete'. The `before` property of every
+	 * change is always undefined: Firestore snapshots carry no previous state.
+	 */
 	override onCollectionChange( queryObject: QueryObject<DocumentObject>, collectionName: string, listener: CollectionChangeListener<DocumentObject> ): Unsubscriber {
 		const baseQuery = this.queryObjectToQueryConstraints( queryObject, collectionName )
 		const queryConstraints = queryObject.limit
@@ -98,6 +106,13 @@ export class FirebaseDatasource extends DataSource {
 		})
 	}
 
+	/**
+	 * Subscribes to changes of a single document.
+	 * `after` holds the current document data and is undefined once the document
+	 * has been deleted; `before` is always undefined because Firestore snapshots
+	 * carry no previous state. Deletions are reported with type 'delete' and
+	 * `params.exists` false.
+	 */
 	override onDocumentChange( documentPath: string, documentId: string, listener: DocumentChangeListener<DocumentObject> ): Unsubscriber {
 		const db = FirebaseHelper.instance.firestore()
 		let previousExists: boolean | undefined
