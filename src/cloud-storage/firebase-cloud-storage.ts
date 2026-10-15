@@ -26,7 +26,7 @@ export class FirebaseCloudStorage extends CloudStorage {
 						progress( snapshot.bytesTransferred, snapshot.totalBytes )
 					},
 					null, 
-					()=>unsubscribe() 
+					() => unsubscribe() 
 				);
 			}
 
@@ -47,10 +47,10 @@ export class FirebaseCloudStorage extends CloudStorage {
 		if ( !this._uploadTask ) throw new Error( `You should call save() before uploadControl()` )
 
 		return {
-			cancel: ()=>this._uploadTask?.cancel(),
-			pause: ()=>this._uploadTask?.pause(),
-			resume: ()=>this._uploadTask?.resume(),
-			onProgress: ( callback )=> this._uploadTask?.on( 'state_changed', snapShot => {
+			cancel: () => this._uploadTask?.cancel(),
+			pause: () => this._uploadTask?.pause(),
+			resume: () => this._uploadTask?.resume(),
+			onProgress: ( callback ) => this._uploadTask?.on( 'state_changed', snapShot => {
 				if ( callback ) {
 					callback( snapShot.bytesTransferred, snapShot.totalBytes )
 				}
