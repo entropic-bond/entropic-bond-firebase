@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "entropic-bond": "^2.0.5",
-    "firebase": "^12.19.0"
+    "firebase": "^13.0.0"
   },
   "allowScripts": {
     "@firebase/util@1.15.3": true,
